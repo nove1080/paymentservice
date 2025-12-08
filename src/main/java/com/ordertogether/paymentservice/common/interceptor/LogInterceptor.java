@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.common.interceptor;
+package com.ordertogether.paymentservice.common.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

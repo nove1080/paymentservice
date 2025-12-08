@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.common.filter;
+package com.ordertogether.paymentservice.common.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

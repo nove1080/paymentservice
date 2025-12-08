@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.common.web.response;
+package com.ordertogether.paymentservice.common.web.response;
 
 import jakarta.annotation.Nullable;
 import lombok.AccessLevel;

@@ -1,6 +1,6 @@
 package com.ordertogether.paymentservice.payment.web.controller;
 
-import com.ordertogether.paymentservice.payment.common.web.response.ApiResponse;
+import com.ordertogether.paymentservice.common.web.response.ApiResponse;
 import com.ordertogether.paymentservice.payment.web.client.TossPaymentsWebClient;
 import com.ordertogether.paymentservice.payment.web.request.TossPaymentsConfirmRequest;
 import lombok.RequiredArgsConstructor;
