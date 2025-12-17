@@ -57,7 +57,8 @@ dependencies {
 	testImplementation 'org.projectlombok:lombok'
 
 	/** Flyway */
-	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
 	implementation 'org.flywaydb:flyway-mysql'
 
 	/** JUnit Platform */
