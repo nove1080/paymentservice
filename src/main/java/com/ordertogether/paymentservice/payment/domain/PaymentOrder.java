@@ -37,7 +37,7 @@ public class PaymentOrder extends BaseTimeEntity {
     @Column(nullable = false)
     private Long productId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
     @Column(nullable = false)
