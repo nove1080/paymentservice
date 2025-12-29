@@ -31,7 +31,7 @@ public class PaymentEvent extends BaseTimeEntity {
     @Column(nullable = false)
     private Long buyerId;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(unique = true)
     private String paymentKey;
 
     @Column(unique = true, nullable = false, updatable = false)
