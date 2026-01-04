@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,6 +103,37 @@ class CheckoutServiceIntegrationTest {
                     .singleElement()
                     .satisfies(paymentOrder -> assertThat(paymentOrder.getAmount()).isEqualTo(BigDecimal.valueOf(20000)))
             );
+        }
+    }
+
+    @DisplayName("중복 결제 요청 시")
+    @Nested
+    class WhenDuplicatedRequest {
+        @Test
+        @DisplayName("체크아웃에 실패한다")
+        @Transactional
+        void thenFailToSavePaymentEventAndOrder() {
+            //given
+            CheckoutCommand checkoutCommand = CheckoutCommand.builder()
+                .buyerId(1L)
+                .productIds(List.of(1L, 2L))
+                .idempotencyKey(UUID.randomUUID().toString())
+                .build();
+
+            given(productClient.getProducts(List.of(1L, 2L)))
+                .willReturn(List.of(
+                    new ProductFixtureBuilder()
+                        .withId(1L)
+                        .build(),
+                    new ProductFixtureBuilder()
+                        .withId(2L)
+                        .build()
+                ));
+
+            //when & then
+            checkoutService.checkout(checkoutCommand);
+            assertThatThrownBy(() -> checkoutService.checkout(checkoutCommand))
+                .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
 }
