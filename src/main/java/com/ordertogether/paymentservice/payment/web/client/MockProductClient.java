@@ -16,7 +16,7 @@ public class MockProductClient implements ProductClient {
                 Product.builder()
                     .id(id)
                     .name("test_product_%s".formatted(id))
-                    .price(BigDecimal.valueOf(id * 10000))
+                    .price(BigDecimal.valueOf(id * 1000))
                     .quantity(2)
                     .sellerId(1L)
                     .build()
