@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" href="https://static.toss.im/icons/png/4x/icon-toss-logo.png" />
@@ -34,12 +34,15 @@
         <button class="button" style="margin-top: 30px" onclick="requestBillingAuth()">빌링키 발급하기</button>
     </div>
 </div>
-<script>
+<script th:inline="javascript">
+    const orderId = /*[[${orderId}]]*/ "";
+    const orderName = /*[[${orderName}]]*/ "";
     const amount = {
-      currency: "KRW",
-      value: 7777,
+        currency: "KRW",
+        value: /*[[${amount}]]*/ 0
     };
-
+</script>
+<script>
     let selectedPaymentMethod = null;
 
     function selectPaymentMethod(method) {
@@ -78,8 +81,8 @@
           await payment.requestPayment({
             method: "CARD", // 카드 및 간편결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success", // 결제 요청이 성공하면 리다이렉트되는 URL
             failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
             customerEmail: "skwpqjq@gmail.com",
@@ -97,8 +100,8 @@
           await payment.requestPayment({
             method: "TRANSFER", // 계좌이체 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "skwpqjq@gmail.com",
@@ -116,8 +119,8 @@
           await payment.requestPayment({
             method: "VIRTUAL_ACCOUNT", // 가상계좌 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/fail",
             customerEmail: "skwpqjq@gmail.com",
@@ -136,8 +139,8 @@
           await payment.requestPayment({
             method: "MOBILE_PHONE", // 휴대폰 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/fail",
             customerEmail: "skwpqjq@gmail.com",
@@ -149,8 +152,8 @@
           await payment.requestPayment({
             method: "CULTURE_GIFT_CERTIFICATE", // 문화상품권 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/fail",
             customerEmail: "skwpqjq@gmail.com",
@@ -165,8 +168,8 @@
               value: 100,
               currency: "USD",
             },
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+            orderId: orderId,
+            orderName: orderName,
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/fail",
             customerEmail: "skwpqjq@gmail.com",
