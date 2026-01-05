@@ -136,4 +136,33 @@ class CheckoutServiceIntegrationTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
+
+    @DisplayName("일부 상품 정보가 누락된 결제 요청 시")
+    @Nested
+    class WhenMissingProductInfo {
+        @Test
+        @DisplayName("런타임 예외를 발생시킨다")
+        void thenThrowRuntimeException() {
+            //given
+            CheckoutCommand checkoutCommand = CheckoutCommand.builder()
+                .buyerId(1L)
+                .productIds(List.of(1L, 2L, 3L))
+                .idempotencyKey(UUID.randomUUID().toString())
+                .build();
+
+            given(productClient.getProducts(List.of(1L, 2L, 3L)))
+                .willReturn(List.of(
+                    new ProductFixtureBuilder()
+                        .withId(1L)
+                        .build(),
+                    new ProductFixtureBuilder()
+                        .withId(2L)
+                        .build()
+                ));
+
+            //when & then
+            assertThatThrownBy(() -> checkoutService.checkout(checkoutCommand))
+                .isInstanceOf(RuntimeException.class);
+        }
+    }
 }

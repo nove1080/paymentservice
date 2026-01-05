@@ -23,7 +23,7 @@ public class CheckoutService {
 
     @Transactional
     public CheckoutResult checkout(CheckoutCommand command) {
-        List<Product> products = productClient.getProducts(command.productIds());
+        List<Product> products = getProducts(command);
         PaymentEvent paymentEvent = savePaymentEvent(command, products);
 
         return CheckoutResult.builder()
@@ -31,6 +31,26 @@ public class CheckoutService {
             .orderName(paymentEvent.getOrderName())
             .totalAmount(paymentEvent.totalAmount())
             .build();
+    }
+
+    private List<Product> getProducts(CheckoutCommand command) {
+        List<Product> products = productClient.getProducts(command.productIds());
+
+        if (hasMissingProducts(command.productIds(), products)) {
+            throw new IllegalArgumentException("일부 상품 정보가 누락되었습니다. [요청된 상품 ID: %s, 조회된 상품 ID: %s]"
+                .formatted(
+                    command.productIds().toString(),
+                    products.stream()
+                        .map(Product::getId)
+                        .toList().toString()
+                ));
+        }
+
+        return products;
+    }
+
+    private static boolean hasMissingProducts(List<Long> requestedProductIds, List<Product> products) {
+        return products.size() != requestedProductIds.size();
     }
 
     private PaymentEvent savePaymentEvent(CheckoutCommand command, List<Product> products) {
