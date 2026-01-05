@@ -4,9 +4,11 @@ import com.ordertogether.paymentservice.payment.domain.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile({"local", "test"})
 public class MockProductClient implements ProductClient {
 
     @Override
