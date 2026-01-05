@@ -11,9 +11,21 @@ public class PaymentDatabaseHelper {
 
     @Transactional
     public void clean() {
-        entityManager.createNativeQuery("DELETE FROM payment_order_history");
-        entityManager.createNativeQuery("DELETE FROM payment_order");
-        entityManager.createNativeQuery("DELETE FROM payment_event");
+        deleteAllPaymentEvent();
+        deleteAllPaymentOrder();
+        deleteAllPaymentOrderHistory();
+    }
+
+    private int deleteAllPaymentEvent() {
+        return entityManager.createNativeQuery("DELETE FROM payment_event").executeUpdate();
+    }
+
+    private int deleteAllPaymentOrder() {
+        return entityManager.createNativeQuery("DELETE FROM payment_order").executeUpdate();
+    }
+
+    private int deleteAllPaymentOrderHistory() {
+        return entityManager.createNativeQuery("DELETE FROM payment_order_history").executeUpdate();
     }
 
 }
