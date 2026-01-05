@@ -11,9 +11,9 @@ public class PaymentDatabaseHelper {
 
     @Transactional
     public void clean() {
-        deleteAllPaymentEvent();
-        deleteAllPaymentOrder();
         deleteAllPaymentOrderHistory();
+        deleteAllPaymentOrder();
+        deleteAllPaymentEvent();
     }
 
     private int deleteAllPaymentEvent() {
