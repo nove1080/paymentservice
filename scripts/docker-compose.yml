@@ -11,3 +11,16 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: ordertogether
       TZ: Asia/Seoul
+
+  mysql-test:
+    image: mysql:8.0.42
+    container_name: ordertogether-mysql-test
+    ports:
+      - "13310:3306"
+    restart: unless-stopped
+    volumes:
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ordertogether
+      TZ: Asia/Seoul

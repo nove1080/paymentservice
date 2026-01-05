@@ -15,4 +15,8 @@ public enum PaymentStatus {
     UNKNOWN("알 수 없음");
 
     private final String description;
+
+    public boolean isNotStarted() {
+        return this == NOT_STARTED;
+    }
 }

@@ -1,0 +1,43 @@
+package com.ordertogether.paymentservice.support.fixture;
+
+import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
+import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
+import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
+import java.math.BigDecimal;
+
+public class PaymentOrderFixtureBuilder {
+
+    private PaymentEvent paymentEvent;
+
+    private Long sellerId = 1L;
+
+    private Long productId = 1L;
+
+    private String productName = "test_product_001";
+
+    private BigDecimal amount = BigDecimal.valueOf(10000);
+
+    private PaymentStatus paymentStatus = PaymentStatus.NOT_STARTED;
+
+    public PaymentOrderFixtureBuilder withProductName(String productName) {
+        this.productName = productName;
+        return this;
+    }
+
+    public PaymentOrderFixtureBuilder withAmount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public PaymentOrder build() {
+        return PaymentOrder.builder()
+            .paymentEvent(paymentEvent)
+            .sellerId(sellerId)
+            .productId(productId)
+            .productName(productName)
+            .amount(amount)
+            .paymentStatus(paymentStatus)
+            .build();
+    }
+
+}
