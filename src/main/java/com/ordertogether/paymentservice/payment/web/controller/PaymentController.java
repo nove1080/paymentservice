@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class PaymentController {
     private final CheckoutService checkoutService;
 
     @PostMapping("/v1/payment/checkout")
-    public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(@RequestBody CheckoutRequest request) {
+    public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(@RequestBody @Validated CheckoutRequest request) {
         CheckoutCommand checkoutCommand = CheckoutCommand.builder()
             .buyerId(request.buyerId())
             .idempotencyKey(IdempotencyKeyGenerator.generate(request.seed()))
