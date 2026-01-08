@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
@@ -49,11 +50,11 @@ class CheckoutServiceIntegrationTest {
         @DisplayName("결제 이벤트와 주문을 저장한다")
         void thenSavePaymentEventAndPaymentOrder() {
             //given
-            String orderId = UUID.randomUUID().toString();
+            OrderId orderId = OrderId.from(UUID.randomUUID().toString());
             CheckoutCommand checkoutCommand = CheckoutCommand.builder()
                 .buyerId(1L)
                 .productIds(List.of(1L, 2L))
-                .idempotencyKey(orderId)
+                .idempotencyKey(orderId.value())
                 .build();
 
             given(productClient.getProducts(List.of(1L, 2L)))
@@ -75,7 +76,7 @@ class CheckoutServiceIntegrationTest {
 
             //then
             assertAll(
-                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId),
+                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId.value()),
                 () -> assertThat(checkoutResult.totalAmount()).isEqualTo(30000L),
                 () -> assertThat(checkoutResult.orderName()).isEqualTo("test_product_001, test_product_002")
             );
@@ -84,7 +85,7 @@ class CheckoutServiceIntegrationTest {
             PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(orderId);
             assertAll(
                 () -> assertThat(paymentEvent.getBuyerId()).isEqualTo(1L),
-                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId),
+                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId.value()),
                 () -> assertThat(paymentEvent.isPaymentDone()).isFalse(),
                 () -> assertThat(paymentEvent.getApprovedAt()).isNull(),
                 () -> assertThat(paymentEvent.getOrderName()).isEqualTo("test_product_001, test_product_002")
