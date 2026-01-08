@@ -1,6 +1,6 @@
 package com.ordertogether.paymentservice.payment.domain;
 
-import java.math.BigDecimal;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class Product {
 
     private final Long id;
     private final String name;
-    private final BigDecimal price;
+    private final Price price;
     private final Integer quantity;
     private final Long sellerId;
 

@@ -1,19 +1,22 @@
 package com.ordertogether.paymentservice.payment.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
-import com.ordertogether.paymentservice.payment.repository.PaymentEventJPARepository;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
+import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
 import com.ordertogether.paymentservice.payment.web.client.ProductClient;
 import com.ordertogether.paymentservice.support.fixture.ProductFixtureBuilder;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +37,7 @@ class CheckoutServiceIntegrationTest {
     private CheckoutService checkoutService;
 
     @Autowired
-    private PaymentEventJPARepository paymentEventJPARepository;
+    private PaymentRepository paymentRepository;
 
     @MockitoBean
     private ProductClient productClient;
@@ -47,11 +50,11 @@ class CheckoutServiceIntegrationTest {
         @DisplayName("결제 이벤트와 주문을 저장한다")
         void thenSavePaymentEventAndPaymentOrder() {
             //given
-            String orderId = UUID.randomUUID().toString();
+            OrderId orderId = OrderId.from(UUID.randomUUID().toString());
             CheckoutCommand checkoutCommand = CheckoutCommand.builder()
                 .buyerId(1L)
                 .productIds(List.of(1L, 2L))
-                .idempotencyKey(orderId)
+                .idempotencyKey(orderId.value())
                 .build();
 
             given(productClient.getProducts(List.of(1L, 2L)))
@@ -73,19 +76,16 @@ class CheckoutServiceIntegrationTest {
 
             //then
             assertAll(
-                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId),
+                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId.value()),
                 () -> assertThat(checkoutResult.totalAmount()).isEqualTo(30000L),
                 () -> assertThat(checkoutResult.orderName()).isEqualTo("test_product_001, test_product_002")
             );
 
             //PaymentEvent 검증
-            Optional<PaymentEvent> optionalPaymentEvent = paymentEventJPARepository.findByOrderId(orderId);
-            assertThat(optionalPaymentEvent).isPresent();
-
-            PaymentEvent paymentEvent = optionalPaymentEvent.get();
+            PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(orderId);
             assertAll(
                 () -> assertThat(paymentEvent.getBuyerId()).isEqualTo(1L),
-                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId),
+                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId.value()),
                 () -> assertThat(paymentEvent.isPaymentDone()).isFalse(),
                 () -> assertThat(paymentEvent.getApprovedAt()).isNull(),
                 () -> assertThat(paymentEvent.getOrderName()).isEqualTo("test_product_001, test_product_002")
@@ -98,10 +98,10 @@ class CheckoutServiceIntegrationTest {
                 () -> assertThat(paymentOrders).allSatisfy(it -> assertTrue(it.getPaymentStatus().isNotStarted())),
                 () -> assertThat(paymentOrders).filteredOn(it -> it.getProductId().equals(1L))
                     .singleElement()
-                    .satisfies(paymentOrder -> assertThat(paymentOrder.getAmount()).isEqualTo(BigDecimal.valueOf(10000))),
+                    .satisfies(paymentOrder -> assertThat(paymentOrder.getAmount()).isEqualTo(Price.valueOf(10000))),
                 () -> assertThat(paymentOrders).filteredOn(it -> it.getProductId().equals(2L))
                     .singleElement()
-                    .satisfies(paymentOrder -> assertThat(paymentOrder.getAmount()).isEqualTo(BigDecimal.valueOf(20000)))
+                    .satisfies(paymentOrder -> assertThat(paymentOrder.getAmount()).isEqualTo(Price.valueOf(20000)))
             );
         }
     }

@@ -4,7 +4,8 @@ import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.domain.Product;
-import com.ordertogether.paymentservice.payment.repository.PaymentEventJPARepository;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
+import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
 import com.ordertogether.paymentservice.payment.web.client.ProductClient;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CheckoutService {
 
     private final ProductClient productClient;
-    private final PaymentEventJPARepository paymentEventRepository;
+    private final PaymentRepository paymentRepository;
 
     @Transactional
     public CheckoutResult checkout(CheckoutCommand command) {
@@ -55,7 +56,7 @@ public class CheckoutService {
 
     private PaymentEvent savePaymentEvent(CheckoutCommand command, List<Product> products) {
         PaymentEvent paymentEvent = PaymentEvent.builder()
-            .orderId(command.idempotencyKey())
+            .orderId(new OrderId(command.idempotencyKey()))
             .buyerId(command.buyerId())
             .orderName(products.stream()
                 .map(Product::getName)
@@ -73,6 +74,7 @@ public class CheckoutService {
                 .build()
             ).forEach(paymentEvent::addPaymentOrder);
 
-        return paymentEventRepository.save(paymentEvent);
+        paymentRepository.insertPaymentEvent(paymentEvent);
+        return paymentEvent;
     }
 }

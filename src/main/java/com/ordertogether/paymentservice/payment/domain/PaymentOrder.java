@@ -1,7 +1,10 @@
 package com.ordertogether.paymentservice.payment.domain;
 
 import com.ordertogether.paymentservice.common.domain.BaseTimeEntity;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,8 +44,12 @@ public class PaymentOrder extends BaseTimeEntity {
 
     private String productName;
 
-    @Column(nullable = false, precision = 19, scale = 2)
-    private BigDecimal amount;
+    @Embedded
+    @AttributeOverride(
+        name = "value",
+        column = @Column(name = "amount", nullable = false, precision = 19, scale = 2)
+    )
+    private Price amount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

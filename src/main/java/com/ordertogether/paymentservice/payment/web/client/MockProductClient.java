@@ -1,6 +1,7 @@
 package com.ordertogether.paymentservice.payment.web.client;
 
 import com.ordertogether.paymentservice.payment.domain.Product;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class MockProductClient implements ProductClient {
                 Product.builder()
                     .id(id)
                     .name("test_product_%s".formatted(id))
-                    .price(BigDecimal.valueOf(id * 1000))
+                    .price(Price.valueOf(id * 1000))
                     .quantity(2)
                     .sellerId(1L)
                     .build()
