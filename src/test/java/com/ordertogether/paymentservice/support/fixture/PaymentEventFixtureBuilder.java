@@ -3,6 +3,7 @@ package com.ordertogether.paymentservice.support.fixture;
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentMethod;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class PaymentEventFixtureBuilder {
             .paymentOrders(paymentOrders)
             .orderName(orderName)
             .paymentKey(paymentKey)
-            .orderId(orderId)
+            .orderId(new OrderId(orderId))
             .isPaymentDone(isPaymentDone)
             .method(method)
             .approvedAt(approvedAt)
