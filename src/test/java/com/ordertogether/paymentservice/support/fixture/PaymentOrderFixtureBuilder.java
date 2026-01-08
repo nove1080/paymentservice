@@ -3,6 +3,7 @@ package com.ordertogether.paymentservice.support.fixture;
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import java.math.BigDecimal;
 
 public class PaymentOrderFixtureBuilder {
@@ -15,7 +16,7 @@ public class PaymentOrderFixtureBuilder {
 
     private String productName = "test_product_001";
 
-    private BigDecimal amount = BigDecimal.valueOf(10000);
+    private Price amount = new Price(BigDecimal.valueOf(10000));
 
     private PaymentStatus paymentStatus = PaymentStatus.NOT_STARTED;
 
@@ -24,7 +25,7 @@ public class PaymentOrderFixtureBuilder {
         return this;
     }
 
-    public PaymentOrderFixtureBuilder withAmount(BigDecimal amount) {
+    public PaymentOrderFixtureBuilder withAmount(Price amount) {
         this.amount = amount;
         return this;
     }

@@ -1,6 +1,7 @@
 package com.ordertogether.paymentservice.support.fixture;
 
 import com.ordertogether.paymentservice.payment.domain.Product;
+import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import java.math.BigDecimal;
 
 public class ProductFixtureBuilder {
@@ -30,7 +31,7 @@ public class ProductFixtureBuilder {
         return Product.builder()
             .id(id)
             .name(name)
-            .price(price)
+            .price(new Price(price))
             .quantity(quantity)
             .sellerId(sellerId)
             .build();
