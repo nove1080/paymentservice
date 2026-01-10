@@ -28,6 +28,7 @@ class PaymentStatusTest {
         static Stream<Arguments> invalidTransitions() {
             return Stream.of(
                 namedArguments(PaymentStatus.NOT_STARTED, PaymentStatus.SUCCESS),
+                namedArguments(PaymentStatus.NOT_STARTED, PaymentStatus.FAIL),
                 namedArguments(PaymentStatus.EXECUTING, PaymentStatus.NOT_STARTED),
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.NOT_STARTED),
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.EXECUTING),
