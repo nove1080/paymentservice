@@ -42,7 +42,7 @@ public class CheckoutService {
                 .formatted(
                     command.productIds().toString(),
                     products.stream()
-                        .map(Product::getId)
+                        .map(Product::id)
                         .toList().toString()
                 ));
         }
@@ -59,17 +59,17 @@ public class CheckoutService {
             .orderId(new OrderId(command.idempotencyKey()))
             .buyerId(command.buyerId())
             .orderName(products.stream()
-                .map(Product::getName)
+                .map(Product::name)
                 .collect(Collectors.joining(", ")))
             .isPaymentDone(false)
             .build();
 
         products.stream()
             .map(it -> PaymentOrder.builder()
-                .productId(it.getId())
-                .productName(it.getName())
-                .sellerId(it.getSellerId())
-                .amount(it.getPrice())
+                .productId(it.id())
+                .productName(it.name())
+                .sellerId(it.sellerId())
+                .amount(it.price())
                 .paymentStatus(PaymentStatus.NOT_STARTED)
                 .build()
             ).forEach(paymentEvent::addPaymentOrder);
