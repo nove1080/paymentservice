@@ -6,9 +6,11 @@ import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Repository
 public class PaymentRepositoryJPAAdapter implements PaymentRepository {
 
     private final PaymentEventJPARepository paymentEventJPARepository;
@@ -20,6 +22,7 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     }
 
     @Override
+    @Transactional
     public void insertPaymentEvent(PaymentEvent paymentEvent) {
         paymentEventJPARepository.save(paymentEvent);
     }
