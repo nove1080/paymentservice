@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 public enum PaymentStatus {
+
     NOT_STARTED("결제 승인 시작 전"),
     EXECUTING("결제 승인 중"),
     SUCCESS("결제 승인 완료"),
@@ -29,6 +30,14 @@ public enum PaymentStatus {
 
     public boolean isNotStarted() {
         return this == NOT_STARTED;
+    }
+
+    public boolean isSuccess() {
+        return this == SUCCESS;
+    }
+
+    public boolean isNotSuccess() {
+        return !isSuccess();
     }
 
     public void validateTransitionTo(PaymentStatus nextStatus) {
