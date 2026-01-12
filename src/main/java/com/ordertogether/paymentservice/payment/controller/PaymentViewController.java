@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.web.controller;
+package com.ordertogether.paymentservice.payment.controller;
 
 import com.ordertogether.paymentservice.common.util.IdempotencyKeyGenerator;
 import com.ordertogether.paymentservice.payment.service.CheckoutService;

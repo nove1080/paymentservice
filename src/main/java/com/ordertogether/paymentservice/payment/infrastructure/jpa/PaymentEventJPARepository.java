@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.persistence.jpa;
+package com.ordertogether.paymentservice.payment.infrastructure.jpa;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import java.util.Optional;

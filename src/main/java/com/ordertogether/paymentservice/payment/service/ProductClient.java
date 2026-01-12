@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.web.client;
+package com.ordertogether.paymentservice.payment.service;
 
 import com.ordertogether.paymentservice.payment.domain.Product;
 import java.util.List;

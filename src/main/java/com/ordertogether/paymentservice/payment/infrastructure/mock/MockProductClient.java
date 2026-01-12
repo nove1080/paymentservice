@@ -1,8 +1,8 @@
-package com.ordertogether.paymentservice.payment.web.client;
+package com.ordertogether.paymentservice.payment.infrastructure.mock;
 
 import com.ordertogether.paymentservice.payment.domain.Product;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
-import java.math.BigDecimal;
+import com.ordertogether.paymentservice.payment.service.ProductClient;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;

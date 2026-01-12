@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.web.config;
+package com.ordertogether.paymentservice.common.config;
 
 import java.time.Duration;
 import java.util.Base64;

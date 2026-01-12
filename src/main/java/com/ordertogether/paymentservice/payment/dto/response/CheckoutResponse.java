@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.web.response;
+package com.ordertogether.paymentservice.payment.dto.response;
 
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
 import lombok.Builder;
