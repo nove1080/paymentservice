@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.dto.request;
+package com.ordertogether.paymentservice.payment.controller.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
