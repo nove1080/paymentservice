@@ -1,8 +1,9 @@
-package com.ordertogether.paymentservice.payment.persistence.jpa;
+package com.ordertogether.paymentservice.payment.infrastructure.jpa;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
+import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
-import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
+import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentRepositoryJPAAdapter implements PaymentRepository {
 
     private final PaymentEventJPARepository paymentEventJPARepository;
+    private final PaymentOrderHistoryJPARepository paymentOrderHistoryRepository;
 
     @Override
     public PaymentEvent selectPaymentEvent(OrderId orderId) {
@@ -25,5 +27,11 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     @Transactional
     public void insertPaymentEvent(PaymentEvent paymentEvent) {
         paymentEventJPARepository.save(paymentEvent);
+    }
+
+    @Override
+    @Transactional
+    public void insertPaymentHistory(PaymentOrderHistory history) {
+        paymentOrderHistoryRepository.save(history);
     }
 }
