@@ -25,7 +25,7 @@ public class PaymentViewController {
             .productIds(List.of(1L, 2L, 3L))
             .build());
 
-        model.addAttribute("orderId", checkoutResult.orderId());
+        model.addAttribute("orderId", checkoutResult.orderId().value());
         model.addAttribute("orderName", checkoutResult.orderName());
         model.addAttribute("amount", checkoutResult.totalAmount());
         return "payment/checkout";
