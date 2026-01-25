@@ -2,6 +2,7 @@ package com.ordertogether.paymentservice.payment.domain;
 
 import com.ordertogether.paymentservice.common.domain.BaseTimeEntity;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
+import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -57,5 +58,21 @@ public class PaymentOrder extends BaseTimeEntity {
 
     public void assignPaymentEvent(PaymentEvent paymentEvent) {
         this.paymentEvent = paymentEvent;
+    }
+
+    public void validateTransition(PaymentStatus nextStatus) {
+        if (!paymentStatus.canTransitionTo(nextStatus)) {
+            throw new InvalidPaymentStatusException(id, paymentStatus);
+        }
+    }
+
+    public PaymentStatus changePaymentStatus(PaymentStatus nextStatus) {
+        validateTransition(nextStatus);
+        this.paymentStatus = nextStatus;
+        return this.paymentStatus;
+    }
+
+    public boolean isPaid() {
+        return paymentStatus.isSuccess();
     }
 }
