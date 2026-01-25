@@ -10,10 +10,10 @@ import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
-import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
+import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
-import com.ordertogether.paymentservice.payment.web.client.ProductClient;
+import com.ordertogether.paymentservice.support.PaymentIntegrationTest;
 import com.ordertogether.paymentservice.support.fixture.ProductFixtureBuilder;
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -30,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("체크아웃 서비스 통합 테스트")
 @ActiveProfiles(profiles = "test")
-@SpringBootTest
-class CheckoutServiceIntegrationTest {
+class CheckoutServicePaymentIntegrationTest extends PaymentIntegrationTest {
 
     @Autowired
     private CheckoutService checkoutService;
@@ -76,7 +74,7 @@ class CheckoutServiceIntegrationTest {
 
             //then
             assertAll(
-                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId.value()),
+                () -> assertThat(checkoutResult.orderId()).isEqualTo(orderId),
                 () -> assertThat(checkoutResult.totalAmount()).isEqualTo(30000L),
                 () -> assertThat(checkoutResult.orderName()).isEqualTo("test_product_001, test_product_002")
             );
@@ -85,7 +83,7 @@ class CheckoutServiceIntegrationTest {
             PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(orderId);
             assertAll(
                 () -> assertThat(paymentEvent.getBuyerId()).isEqualTo(1L),
-                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId.value()),
+                () -> assertThat(paymentEvent.getOrderId()).isEqualTo(orderId),
                 () -> assertThat(paymentEvent.isPaymentDone()).isFalse(),
                 () -> assertThat(paymentEvent.getApprovedAt()).isNull(),
                 () -> assertThat(paymentEvent.getOrderName()).isEqualTo("test_product_001, test_product_002")
