@@ -1,13 +1,17 @@
-package com.ordertogether.paymentservice.payment.web.controller;
+package com.ordertogether.paymentservice.payment.controller;
 
 import com.ordertogether.paymentservice.common.util.IdempotencyKeyGenerator;
 import com.ordertogether.paymentservice.common.web.response.ApiResponse;
+import com.ordertogether.paymentservice.payment.controller.request.CheckoutRequest;
+import com.ordertogether.paymentservice.payment.controller.request.PaymentConfirmRequest;
+import com.ordertogether.paymentservice.payment.controller.response.CheckoutResponse;
+import com.ordertogether.paymentservice.payment.controller.response.PaymentConfirmResponse;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.service.CheckoutService;
+import com.ordertogether.paymentservice.payment.service.PaymentConfirmService;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
-import com.ordertogether.paymentservice.payment.web.client.TossPaymentsWebClient;
-import com.ordertogether.paymentservice.payment.web.request.CheckoutRequest;
-import com.ordertogether.paymentservice.payment.web.request.TossPaymentsConfirmRequest;
-import com.ordertogether.paymentservice.payment.web.response.CheckoutResponse;
+import com.ordertogether.paymentservice.payment.service.command.PaymentConfirmCommand;
+import com.ordertogether.paymentservice.payment.service.result.PaymentConfirmResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,8 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PaymentController {
 
-    private final TossPaymentsWebClient tossPaymentsWebClient;
     private final CheckoutService checkoutService;
+    private final PaymentConfirmService paymentConfirmService;
 
     @PostMapping("/v1/payment/checkout")
     public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(@RequestBody @Validated CheckoutRequest request) {
@@ -39,16 +43,19 @@ public class PaymentController {
         return ResponseEntity.ok(ApiResponse.with(HttpStatus.OK, "결제 준비가 완료되었습니다.", response));
     }
 
-    @PostMapping("/v1/toss/payment/confirm")
-    public ResponseEntity<ApiResponse<String>> confirmPayment(@RequestBody TossPaymentsConfirmRequest request) {
-        String data = tossPaymentsWebClient.confirmPayment(
-            request.paymentKey(),
-            request.orderId(),
-            request.amount()
-        );
+    @PostMapping("/v1/payment/confirm")
+    public ResponseEntity<ApiResponse<PaymentConfirmResponse>> confirmPayment(@RequestBody @Validated PaymentConfirmRequest request) {
+        PaymentConfirmCommand confirmCommand = PaymentConfirmCommand.builder()
+            .paymentKey(request.paymentKey())
+            .orderId(new OrderId(request.orderId()))
+            .amount(request.amount())
+            .build();
 
-        log.info("Payment confirmation response: {}", data);
-        return ResponseEntity.ok(ApiResponse.with(HttpStatus.OK, "결제 승인을 완료하였습니다.", data));
+        PaymentConfirmResult confirmResult = paymentConfirmService.confirm(confirmCommand);
+        //포인트 충전
+
+        PaymentConfirmResponse responseData = PaymentConfirmResponse.from(confirmResult);
+        return ResponseEntity.ok(ApiResponse.with(HttpStatus.OK, "결제 승인을 완료하였습니다.", responseData));
     }
 
 }
