@@ -32,6 +32,10 @@ public enum PaymentStatus {
         return this == NOT_STARTED;
     }
 
+    public boolean isExecuting() {
+        return this == EXECUTING;
+    }
+
     public boolean isSuccess() {
         return this == SUCCESS;
     }
@@ -40,9 +44,15 @@ public enum PaymentStatus {
         return !isSuccess();
     }
 
-    public void validateTransitionTo(PaymentStatus nextStatus) {
-        if (!nextStatuses.contains(nextStatus)) {
-            throw new IllegalStateException("결제 상태는 %s 에서 %s(으)로 변경이 불가능합니다.".formatted(this.name(), nextStatus.name()));
-        }
+    public boolean isFail() {
+        return this == FAIL;
+    }
+
+    public boolean isConfirmResult() {
+        return this == SUCCESS || this == FAIL || this == UNKNOWN;
+    }
+
+    public boolean canTransitionTo(PaymentStatus nextStatus) {
+        return nextStatuses.contains(nextStatus);
     }
 }

@@ -16,28 +16,31 @@ class PaymentStatusTest {
     @Nested
     @DisplayName("상태 전이 시")
     class whenTransit {
-        @DisplayName("잘못된 상태 전이면 예외를 던진다")
+        @DisplayName("잘못된 상태 전이면 false 를 반환한다")
         @MethodSource("invalidTransitions")
         @ParameterizedTest(name = "{0} -> {1}")
         void thenThrowException(PaymentStatus current, PaymentStatus next) {
             // when & then
-            assertThatThrownBy(() -> current.validateTransitionTo(next))
-                .isInstanceOf(IllegalStateException.class);
+            assertThat(current.canTransitionTo(next)).isFalse();
         }
 
         static Stream<Arguments> invalidTransitions() {
             return Stream.of(
                 namedArguments(PaymentStatus.NOT_STARTED, PaymentStatus.SUCCESS),
                 namedArguments(PaymentStatus.NOT_STARTED, PaymentStatus.FAIL),
+
                 namedArguments(PaymentStatus.EXECUTING, PaymentStatus.NOT_STARTED),
+
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.NOT_STARTED),
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.EXECUTING),
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.FAIL),
                 namedArguments(PaymentStatus.SUCCESS, PaymentStatus.UNKNOWN),
+
                 namedArguments(PaymentStatus.FAIL, PaymentStatus.NOT_STARTED),
                 namedArguments(PaymentStatus.FAIL, PaymentStatus.EXECUTING),
                 namedArguments(PaymentStatus.FAIL, PaymentStatus.SUCCESS),
                 namedArguments(PaymentStatus.FAIL, PaymentStatus.UNKNOWN),
+
                 namedArguments(PaymentStatus.UNKNOWN, PaymentStatus.NOT_STARTED),
                 namedArguments(PaymentStatus.UNKNOWN, PaymentStatus.SUCCESS),
                 namedArguments(PaymentStatus.UNKNOWN, PaymentStatus.FAIL)
