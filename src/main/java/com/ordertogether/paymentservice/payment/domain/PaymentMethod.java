@@ -9,7 +9,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public enum PaymentMethod {
     CARD("카드 결제"),
-    EASY_PAY("간편 결제");
+    EASY_PAY("간편 결제"),
+    UNKNOWN("알 수 없음");
 
     private final String description;
 }
