@@ -24,7 +24,7 @@ public class TossWebClientConfiguration {
     private String secretKey;
 
     @Bean
-    public RestClient tossPaymentsRestClient() {
+    public RestClient tossPaymentRestClient() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofSeconds(CONNECTION_TIMEOUT_SECONDS));
         factory.setReadTimeout(Duration.ofSeconds(READ_TIMEOUT_SECONDS));
