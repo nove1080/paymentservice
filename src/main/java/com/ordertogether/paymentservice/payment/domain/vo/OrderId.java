@@ -45,6 +45,10 @@ public record OrderId(
         return new OrderId(value);
     }
 
+    public static OrderId valueOf(String value) {
+        return new OrderId(value);
+    }
+
     private void validateLength(String value) {
         int length = value.length();
         if (length < MIN_LENGTH || length > MAX_LENGTH) {

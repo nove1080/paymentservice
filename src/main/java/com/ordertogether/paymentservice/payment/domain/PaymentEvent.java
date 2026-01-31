@@ -2,6 +2,10 @@ package com.ordertogether.paymentservice.payment.domain;
 
 import com.ordertogether.paymentservice.common.domain.BaseTimeEntity;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
+import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult.SuccessExtraInfo;
+import com.ordertogether.paymentservice.exception.InvalidPaymentException;
+import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,10 +72,6 @@ public class PaymentEvent extends BaseTimeEntity {
 
     private LocalDateTime approvedAt;
 
-    public String getOrderId() {
-        return orderId.value();
-    }
-
     public void addPaymentOrder(PaymentOrder paymentOrder) {
         paymentOrder.assignPaymentEvent(this);
         paymentOrders.add(paymentOrder);
@@ -81,5 +81,39 @@ public class PaymentEvent extends BaseTimeEntity {
         return paymentOrders.stream()
             .mapToLong(it -> it.getAmount().toLong())
             .sum();
+    }
+
+    public void updatePaymentKey(String paymentKey) {
+        this.paymentKey = paymentKey;
+    }
+
+    /**
+     * 결제 완료 상태로 변경합니다.
+     * @param successInfo 결제 부가 정보
+     * @throws InvalidPaymentStatusException 완료되지 않은 결제 주문이 존재하는 경우
+     */
+    public void done(@Nonnull SuccessExtraInfo successInfo) throws InvalidPaymentStatusException{
+        paymentOrders.stream()
+            .filter(it -> !it.isPaid())
+            .findAny()
+            .ifPresent(it -> { throw new InvalidPaymentStatusException(orderId, it.getPaymentStatus()); });
+
+        applySuccessInfo(successInfo);
+        this.isPaymentDone = true;
+    }
+
+    /**
+     * 결제 완료로 인한 부가정보를 기록합니다. <br>
+     * - 결제 수단 <br>
+     * - PG 결제 승인 시간
+     * @param successExtraInfo
+     */
+    private void applySuccessInfo(@Nonnull SuccessExtraInfo successExtraInfo) {
+        if (method != null || approvedAt != null) {
+            throw new InvalidPaymentException("이미 결제 부가 정보가 기록되어 있습니다. [orderId = %s]".formatted(orderId.value()));
+        }
+
+        this.method = successExtraInfo.paymentMethod();
+        this.approvedAt = successExtraInfo.approvedAt();
     }
 }

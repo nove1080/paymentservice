@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 public enum PaymentStatus {
+
     NOT_STARTED("결제 승인 시작 전"),
     EXECUTING("결제 승인 중"),
     SUCCESS("결제 승인 완료"),
@@ -20,7 +21,7 @@ public enum PaymentStatus {
     private List<PaymentStatus> nextStatuses;
 
     static {
-        NOT_STARTED.nextStatuses = List.of(EXECUTING, FAIL, UNKNOWN);
+        NOT_STARTED.nextStatuses = List.of(EXECUTING, UNKNOWN);
         EXECUTING.nextStatuses = List.of(SUCCESS, FAIL, UNKNOWN);
         SUCCESS.nextStatuses = Collections.emptyList();
         FAIL.nextStatuses = Collections.emptyList();
@@ -31,9 +32,27 @@ public enum PaymentStatus {
         return this == NOT_STARTED;
     }
 
-    public void validateTransitionTo(PaymentStatus nextStatus) {
-        if (!nextStatuses.contains(nextStatus)) {
-            throw new IllegalStateException("결제 상태는 %s 에서 %s(으)로 변경이 불가능합니다.".formatted(this.name(), nextStatus.name()));
-        }
+    public boolean isExecuting() {
+        return this == EXECUTING;
+    }
+
+    public boolean isSuccess() {
+        return this == SUCCESS;
+    }
+
+    public boolean isNotSuccess() {
+        return !isSuccess();
+    }
+
+    public boolean isFail() {
+        return this == FAIL;
+    }
+
+    public boolean isConfirmResult() {
+        return this == SUCCESS || this == FAIL || this == UNKNOWN;
+    }
+
+    public boolean canTransitionTo(PaymentStatus nextStatus) {
+        return nextStatuses.contains(nextStatus);
     }
 }

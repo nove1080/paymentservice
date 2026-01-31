@@ -20,13 +20,13 @@ public class PaymentOrderFixtureBuilder {
 
     private PaymentStatus paymentStatus = PaymentStatus.NOT_STARTED;
 
-    public PaymentOrderFixtureBuilder withProductName(String productName) {
-        this.productName = productName;
+    public PaymentOrderFixtureBuilder withAmount(Price amount) {
+        this.amount = amount;
         return this;
     }
 
-    public PaymentOrderFixtureBuilder withAmount(Price amount) {
-        this.amount = amount;
+    public PaymentOrderFixtureBuilder withPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
         return this;
     }
 

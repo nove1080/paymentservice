@@ -17,9 +17,9 @@ public class PaymentEventFixtureBuilder {
 
     private String orderName = "";
 
-    private String paymentKey = "TEST-payment-key-001";
+    private String paymentKey = "";
 
-    private String orderId = "TEST-order-id-001";
+    private OrderId orderId = OrderId.valueOf("test-order-id");
 
     private boolean isPaymentDone = false;
 
@@ -35,22 +35,41 @@ public class PaymentEventFixtureBuilder {
         return this;
     }
 
-    public PaymentEventFixtureBuilder withOrderId(String orderId) {
+    public PaymentEventFixtureBuilder withOrderId(OrderId orderId) {
         this.orderId = orderId;
         return this;
     }
 
+    public PaymentEventFixtureBuilder withPaymentKey(String paymentKey) {
+        this.paymentKey = paymentKey;
+        return this;
+    }
+
+    public PaymentEventFixtureBuilder withMethod(PaymentMethod method) {
+        this.method = method;
+        return this;
+    }
+
+    public PaymentEventFixtureBuilder withApprovedAt(LocalDateTime approvedAt) {
+        this.approvedAt = approvedAt;
+        return this;
+    }
+
     public PaymentEvent build() {
-        return PaymentEvent.builder()
+        PaymentEvent paymentEvent = PaymentEvent.builder()
             .buyerId(buyerId)
             .paymentOrders(paymentOrders)
             .orderName(orderName)
             .paymentKey(paymentKey)
-            .orderId(new OrderId(orderId))
+            .orderId(orderId)
             .isPaymentDone(isPaymentDone)
             .method(method)
             .approvedAt(approvedAt)
             .build();
+
+        paymentOrders.forEach(it -> it.assignPaymentEvent(paymentEvent));
+
+        return paymentEvent;
     }
 
 }

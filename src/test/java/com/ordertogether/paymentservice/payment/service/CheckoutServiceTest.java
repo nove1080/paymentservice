@@ -8,10 +8,10 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.Product;
-import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
+import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
+import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
-import com.ordertogether.paymentservice.payment.web.client.ProductClient;
 import com.ordertogether.paymentservice.support.fixture.ProductFixtureBuilder;
 import java.math.BigDecimal;
 import java.util.List;
@@ -76,7 +76,7 @@ class CheckoutServiceTest {
             then(paymentRepository).should().insertPaymentEvent(any(PaymentEvent.class));
 
             Assertions.assertAll(
-                () -> assertThat(checkoutResult.orderId()).isEqualTo("TEST-order-id-001"),
+                () -> assertThat(checkoutResult.orderId()).isEqualTo(OrderId.valueOf("TEST-order-id-001")),
                 () -> assertThat(checkoutResult.orderName()).isEqualTo("test_product_001, test_product_002"),
                 () -> assertThat(checkoutResult.totalAmount()).isEqualTo(30000L)
             );

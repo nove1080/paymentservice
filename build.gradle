@@ -91,6 +91,7 @@ jacocoTestReport {
 							'**/common/**',
 							'**/config/*',
 							'**/*Exception*',
+							'**/infrastructure/toss/**',
 							'**/dto/**',
 							'**/request/**',
 							'**/response/**'

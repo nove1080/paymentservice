@@ -5,10 +5,9 @@ import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.domain.Product;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
-import com.ordertogether.paymentservice.payment.persistence.PaymentRepository;
+import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
-import com.ordertogether.paymentservice.payment.web.client.ProductClient;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class CheckoutService {
                 .formatted(
                     command.productIds().toString(),
                     products.stream()
-                        .map(Product::getId)
+                        .map(Product::id)
                         .toList().toString()
                 ));
         }
@@ -59,17 +58,17 @@ public class CheckoutService {
             .orderId(new OrderId(command.idempotencyKey()))
             .buyerId(command.buyerId())
             .orderName(products.stream()
-                .map(Product::getName)
+                .map(Product::name)
                 .collect(Collectors.joining(", ")))
             .isPaymentDone(false)
             .build();
 
         products.stream()
             .map(it -> PaymentOrder.builder()
-                .productId(it.getId())
-                .productName(it.getName())
-                .sellerId(it.getSellerId())
-                .amount(it.getPrice())
+                .productId(it.id())
+                .productName(it.name())
+                .sellerId(it.sellerId())
+                .amount(it.price())
                 .paymentStatus(PaymentStatus.NOT_STARTED)
                 .build()
             ).forEach(paymentEvent::addPaymentOrder);
