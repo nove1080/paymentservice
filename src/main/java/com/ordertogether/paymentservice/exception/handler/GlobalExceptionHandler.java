@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidPaymentException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidPaymentException(InvalidPaymentException ex) {
         log.info("결제 관련 에러 발생 ", ex);
-        return ResponseEntity.internalServerError().body(ApiResponse.with(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+        return ResponseEntity.badRequest().body(ApiResponse.with(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
