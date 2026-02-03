@@ -17,10 +17,10 @@ public class TossWebClientConfiguration {
 
     private static final int READ_TIMEOUT_SECONDS = 10;
 
-    @Value("${psp.toss.url}")
+    @Value("${pg.toss.url}")
     private String baseUrl;
 
-    @Value("${psp.toss.secret-key}")
+    @Value("${pg.toss.secret-key}")
     private String secretKey;
 
     @Bean
