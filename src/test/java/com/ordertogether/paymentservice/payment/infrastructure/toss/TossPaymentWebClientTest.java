@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.retry.RetryTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-@Tag(TestType.LONG_TIME_TEST)
+@Tag(TestType.SLOW_TEST)
 @DisplayName("토스페이먼츠 클라이언트 테스트")
 @ActiveProfiles("test")
 @SpringBootTest(classes = {
