@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.support;
+package com.ordertogether.paymentservice.support.base;
 
 import com.ordertogether.paymentservice.config.PaymentTestConfig;
 import com.ordertogether.paymentservice.support.database.PaymentDatabaseHelper;

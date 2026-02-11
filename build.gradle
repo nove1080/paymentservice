@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '4.0.0'
+		springBootVersion = '4.0.2'
 		springDependencyManagementVersion = '1.1.7'
 	}
 }
@@ -66,13 +66,8 @@ dependencies {
 }
 
 test {
-	useJUnitPlatform()
-	doFirst {
-		if (filter.commandLineIncludePatterns.isEmpty()) {
-			useJUnitPlatform() {
-				excludeTags("slow-test")
-			}
-		}
+	useJUnitPlatform{
+		excludeTags 'slow-test'
 	}
 	finalizedBy jacocoTestReport
 }
@@ -91,7 +86,8 @@ jacocoTestReport {
 							'**/common/**',
 							'**/config/*',
 							'**/*Exception*',
-							'**/infrastructure/toss/**',
+							'**/error/**',
+							'**/mock/**',
 							'**/dto/**',
 							'**/request/**',
 							'**/response/**'

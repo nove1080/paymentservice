@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
-psp:
+pg:
   toss:
     url: https://api.tosspayments.com
     secret-key: ${TOSS_SECRET_KEY}

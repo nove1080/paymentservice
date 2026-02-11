@@ -1,12 +1,13 @@
-package com.ordertogether.paymentservice.payment.infrastructure.toss;
+package com.ordertogether.paymentservice.payment.infrastructure.toss.error;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import java.util.Arrays;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum TossPaymentErrorCode {
 
     // 400 BAD_REQUEST
@@ -78,52 +79,32 @@ public enum TossPaymentErrorCode {
             .orElse(UNKNOWN);
     }
 
-    public PaymentStatus toPaymentStatus() {
-        if (isFailure()) {
-            return PaymentStatus.FAIL;
-        }
-        return PaymentStatus.UNKNOWN;
+    public boolean isSuccess() {
+        return this == ALREADY_PROCESSED_PAYMENT;
     }
 
-    public boolean isFailure() {
-        return switch (this) {
-            case ALREADY_PROCESSED_PAYMENT,
-                EXCEED_MAX_CARD_INSTALLMENT_PLAN,
-                NOT_ALLOWED_POINT_USE,
-                INVALID_API_KEY,
-                INVALID_CARD_EXPIRATION,
-                BELOW_MINIMUM_AMOUNT,
-                INVALID_CARD_INSTALLMENT_PLAN,
-                NOT_SUPPORTED_MONTHLY_INSTALLMENT_PLAN,
-                NOT_FOUND_TERMINAL_ID,
-                INVALID_AUTHORIZE_AUTH,
-                INVALID_CARD_NUMBER,
-                INVALID_STOPPED_CARD,
-                INVALID_UNREGISTERED_SUBMALL,
-                NOT_REGISTERED_BUSINESS,
-                EXCEED_MAX_ONE_DAY_WITHDRAW_AMOUNT,
-                EXCEED_MAX_ONE_TIME_WITHDRAW_AMOUNT,
-                EXCEED_MAX_AMOUNT,
-                INVALID_ACCOUNT_INFO_RE_REGISTER,
-                NOT_AVAILABLE_PAYMENT,
-                EXCEED_MAX_MONTHLY_PAYMENT_AMOUNT,
-                UNAUTHORIZED_KEY,
-                REJECT_ACCOUNT_PAYMENT,
-                REJECT_CARD_PAYMENT,
-                REJECT_CARD_COMPANY,
-                FORBIDDEN_REQUEST,
-                REJECT_TOSSPAY_INVALID_ACCOUNT,
-                EXCEED_MAX_AUTH_COUNT,
-                EXCEED_MAX_ONE_DAY_AMOUNT,
-                NOT_AVAILABLE_BANK,
-                INVALID_PASSWORD,
-                INCORRECT_BASIC_AUTH_FORMAT,
-                FDS_ERROR,
-                NOT_FOUND_PAYMENT,
-                NOT_FOUND_PAYMENT_SESSION,
-                UNKNOWN_PAYMENT_ERROR -> true;
-                default -> false;
+    public boolean isUnknown() {
+        return switch(this) {
+            case
+                PROVIDER_ERROR,
+                CARD_PROCESSING_ERROR,
+                UNAPPROVED_ORDER_ID,
+                FAILED_PAYMENT_INTERNAL_SYSTEM_PROCESSING,
+                FAILED_INTERNAL_SYSTEM_PROCESSING,
+                UNKNOWN_PAYMENT_ERROR,
+                UNKNOWN -> true;
+            default -> false;
         };
+    }
+
+    public boolean isRetryable() {
+        return isUnknown();
+    }
+
+    public PaymentStatus toPaymentStatus() {
+        if (isSuccess()) return PaymentStatus.SUCCESS;
+        if (isUnknown()) return PaymentStatus.UNKNOWN;
+        return PaymentStatus.FAIL;
     }
 
 }

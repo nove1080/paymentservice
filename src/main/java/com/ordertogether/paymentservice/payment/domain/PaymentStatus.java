@@ -48,6 +48,10 @@ public enum PaymentStatus {
         return this == FAIL;
     }
 
+    public boolean isUnknown() {
+        return this == UNKNOWN;
+    }
+
     public boolean isConfirmResult() {
         return this == SUCCESS || this == FAIL || this == UNKNOWN;
     }
