@@ -13,7 +13,7 @@ import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.CheckoutCommand;
 import com.ordertogether.paymentservice.payment.service.result.CheckoutResult;
-import com.ordertogether.paymentservice.support.PaymentIntegrationTest;
+import com.ordertogether.paymentservice.support.base.PaymentIntegrationTest;
 import com.ordertogether.paymentservice.support.fixture.ProductFixtureBuilder;
 import java.math.BigDecimal;
 import java.util.List;

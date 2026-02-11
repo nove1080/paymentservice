@@ -12,7 +12,7 @@ import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.PaymentStatusUpdateCommand;
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult.SuccessExtraInfo;
-import com.ordertogether.paymentservice.support.PaymentIntegrationTest;
+import com.ordertogether.paymentservice.support.base.PaymentIntegrationTest;
 import com.ordertogether.paymentservice.support.fixture.PaymentEventFixtureBuilder;
 import com.ordertogether.paymentservice.support.fixture.PaymentOrderFixtureBuilder;
 import java.time.LocalDateTime;

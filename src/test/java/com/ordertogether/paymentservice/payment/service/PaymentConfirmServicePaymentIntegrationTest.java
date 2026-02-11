@@ -17,7 +17,7 @@ import com.ordertogether.paymentservice.payment.service.command.PaymentConfirmCo
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult;
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult.SuccessExtraInfo;
 import com.ordertogether.paymentservice.payment.service.result.PaymentConfirmResult;
-import com.ordertogether.paymentservice.support.PaymentIntegrationTest;
+import com.ordertogether.paymentservice.support.base.PaymentIntegrationTest;
 import com.ordertogether.paymentservice.support.fixture.PaymentEventFixtureBuilder;
 import com.ordertogether.paymentservice.support.fixture.PaymentOrderFixtureBuilder;
 import com.ordertogether.paymentservice.exception.InvalidPaymentException;
