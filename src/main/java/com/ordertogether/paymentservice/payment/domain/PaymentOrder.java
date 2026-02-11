@@ -34,7 +34,7 @@ public class PaymentOrder extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "payment_event_id")
+    @JoinColumn(name = "payment_event_id", nullable = false)
     private PaymentEvent paymentEvent;
 
     @Column(nullable = false)
