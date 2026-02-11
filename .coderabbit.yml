@@ -3,12 +3,34 @@ early_access: false
 reviews:
   profile: "chill"
   request_changes_workflow: false
+  changed_files_summary: false
+  sequence_diagrams: false
+  related_issues: false
   high_level_summary: true
-  poem: false
+  poem: true
   review_status: true
   collapse_walkthrough: false
+  path_instructions:
+    - path: "src/main/**"
+      instructions: |
+        1. 결제/금융 서비스의 설계에 대한 리뷰를 진행해주세요.
+        2. 가독성, 예외처리, 테스트/확장/유지보수성, 모듈화, API/DB/보안 설계 기준을 기반으로 리뷰해주세요.
+        3. 객체지향, 성능, 최신 트렌드, 불필요한 로직, 클린코드, 리팩토링, 서비스/도메인 설계, 공통 예외 처리, 확장성도 함께 확인해주세요.
+    - path: "src/test/**"
+      instructions: |
+        1. 테스트가 요구사항을 검증하는지(단순 통과/구현 디테일 검증만 하고 있지 않은지) 확인해주세요.
+        2. 단위 테스트의 경우, FIRST 원칙을 잘 따르고 있는지 확인해주세요.
+          F: Fast - 빠르게 실행되는가?
+          I: Independent - 다른 테스트에 의존하지 않는가?
+          R: Repeatable - 여러 번 실행해도 같은 결과가 나오는가?
+          S: Self-Validating - 테스트 결과가 명확한가?
+          T: Timely - 적절한 시점에 작성되었는가?
+        3. 미작성한 테스트 코드 케이스가 있다면, 어떤 테스트가 필요한지 제안해주세요. (예: API 테스트, Service 단위 테스트, Repository 단위 테스트)
   auto_review:
     enabled: true
     drafts: false
 chat:
   auto_reply: true
+knowledge_base:
+  web_search:
+    enabled: true
