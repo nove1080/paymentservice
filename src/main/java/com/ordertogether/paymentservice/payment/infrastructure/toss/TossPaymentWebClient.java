@@ -38,7 +38,7 @@ public class TossPaymentWebClient implements PaymentGatewayClient {
         } catch (RetryException e) {
             //RetryException -> BusinessException 으로 변환
             String errorCode = PaymentStatus.UNKNOWN.name();
-            String errorMessage = PaymentStatus.EXECUTING.getDescription();
+            String errorMessage = PaymentStatus.UNKNOWN.getDescription();
             PaymentStatus paymentStatus = PaymentStatus.UNKNOWN;
 
             if (e.getLastException() instanceof PaymentGatewayConfirmationException paymentGatewayConfirmationException) {
