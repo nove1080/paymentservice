@@ -1,4 +1,4 @@
-package com.ordertogether.paymentservice.payment.infrastructure.toss;
+package com.ordertogether.paymentservice.payment.infrastructure.toss.error;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import java.util.Arrays;
@@ -87,12 +87,12 @@ public enum TossPaymentErrorCode {
         return switch(this) {
             case
                 PROVIDER_ERROR,
-                    CARD_PROCESSING_ERROR,
-                    UNAPPROVED_ORDER_ID,
-                    FAILED_PAYMENT_INTERNAL_SYSTEM_PROCESSING,
-                    FAILED_INTERNAL_SYSTEM_PROCESSING,
-                    UNKNOWN_PAYMENT_ERROR,
-                    UNKNOWN -> true;
+                CARD_PROCESSING_ERROR,
+                UNAPPROVED_ORDER_ID,
+                FAILED_PAYMENT_INTERNAL_SYSTEM_PROCESSING,
+                FAILED_INTERNAL_SYSTEM_PROCESSING,
+                UNKNOWN_PAYMENT_ERROR,
+                UNKNOWN -> true;
             default -> false;
         };
     }
