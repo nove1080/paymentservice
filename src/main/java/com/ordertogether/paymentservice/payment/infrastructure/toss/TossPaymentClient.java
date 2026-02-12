@@ -13,6 +13,7 @@ import com.ordertogether.paymentservice.payment.service.command.PGConfirmCommand
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult;
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult.SuccessExtraInfo;
 import java.time.ZoneId;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.retry.RetryException;
@@ -70,8 +71,9 @@ public class TossPaymentClient implements PaymentGatewayClient {
                 .build())
             .exchange((req, res) -> {
                 if (res.getStatusCode().isError()) {
-                    TossPaymentFailureResponse failureResponse = res.bodyTo(TossPaymentFailureResponse.class);
-                    TossPaymentErrorCode errorCode = TossPaymentErrorCode.from(failureResponse == null ? TossPaymentErrorCode.UNKNOWN.name() : failureResponse.code());
+                    TossPaymentFailureResponse failureResponse = Optional.ofNullable(res.bodyTo(TossPaymentFailureResponse.class))
+                        .orElseThrow(() -> unknownConfirmationException(request));
+                    TossPaymentErrorCode errorCode = TossPaymentErrorCode.from(failureResponse.code());
 
                     log.info("토스페이먼츠 결제 승인 실패. response: {}, errorCode: {}", failureResponse, errorCode);
 
@@ -83,7 +85,8 @@ public class TossPaymentClient implements PaymentGatewayClient {
                         errorCode.getMessage()
                     );
                 } else {
-                    TossPaymentConfirmResponse tossResponse = res.bodyTo(TossPaymentConfirmResponse.class);
+                    TossPaymentConfirmResponse tossResponse = Optional.ofNullable(res.bodyTo(TossPaymentConfirmResponse.class))
+                        .orElseThrow(() -> unknownConfirmationException(request));
 
                     log.info("토스페이먼츠 결제 승인 성공. response: {}", tossResponse);
 
@@ -100,5 +103,15 @@ public class TossPaymentClient implements PaymentGatewayClient {
                     );
                 }
             });
+    }
+
+    private static PaymentGatewayConfirmationException unknownConfirmationException(PGConfirmCommand request) {
+        return new PaymentGatewayConfirmationException(
+            request.paymentKey(),
+            request.orderId(),
+            PaymentStatus.UNKNOWN,
+            TossPaymentErrorCode.UNKNOWN.name(),
+            TossPaymentErrorCode.UNKNOWN.getMessage()
+        );
     }
 }
