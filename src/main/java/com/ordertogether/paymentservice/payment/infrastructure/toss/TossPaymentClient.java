@@ -60,6 +60,13 @@ public class TossPaymentClient implements PaymentGatewayClient {
         }
     }
 
+    /**
+     * Confirms a payment with Toss Payments and maps the HTTP response to a PGConfirmResult.
+     *
+     * @param request confirmation command containing orderId, paymentKey, and amount
+     * @return a PGConfirmResult representing the confirmed payment, including payment method, amount, and approval timestamp
+     * @throws PaymentGatewayConfirmationException if Toss returns an error response or a required response body is missing; the exception contains the mapped payment status, error code, and error message
+     */
     private PGConfirmResult executeConfirmPayment(PGConfirmCommand request) throws PaymentGatewayConfirmationException {
         return tossRestClient.post()
             .uri(CONFIRM_PAYMENT_URL)
@@ -105,6 +112,15 @@ public class TossPaymentClient implements PaymentGatewayClient {
             });
     }
 
+    /**
+     * Create a PaymentGatewayConfirmationException representing an unknown confirmation for the given request.
+     *
+     * The returned exception contains the request's payment key and order id, uses `PaymentStatus.UNKNOWN`,
+     * and sets the error code and message to `TossPaymentErrorCode.UNKNOWN`.
+     *
+     * @param request the confirmation request whose identifiers are attached to the exception
+     * @return a PaymentGatewayConfirmationException with UNKNOWN status and UNKNOWN error code/message
+     */
     private static PaymentGatewayConfirmationException unknownConfirmationException(PGConfirmCommand request) {
         return new PaymentGatewayConfirmationException(
             request.paymentKey(),
