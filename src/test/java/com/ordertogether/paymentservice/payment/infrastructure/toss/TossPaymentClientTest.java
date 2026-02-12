@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
     PaymentGatewayTestClientConfig.class,
     PaymentGatewayRetryConfiguration.class}
 )
-class TossPaymentWebClientTest {
+class TossPaymentClientTest {
 
     private static final String TOSS_ERROR_SCENARIO_HEADER = "TossPayments-Test-Code";
 
@@ -51,7 +51,7 @@ class TossPaymentWebClientTest {
         @MethodSource("tossRetryableErrorCodes")
         void whenOccurError_thenClassifyRetryableError(TossPaymentErrorCode errorCode) {
             //given
-            TossPaymentWebClient tossPaymentWebClient = new TossPaymentWebClient(
+            TossPaymentClient tossPaymentClient = new TossPaymentClient(
                 paymentGatewayTestClientConfig.createWithHeaders(
                     Map.of(TOSS_ERROR_SCENARIO_HEADER, errorCode.name())
                 ),
@@ -65,7 +65,7 @@ class TossPaymentWebClientTest {
                 .build();
 
             //when & then
-            assertThatThrownBy(() -> tossPaymentWebClient.confirmPayment(confirmCommand))
+            assertThatThrownBy(() -> tossPaymentClient.confirmPayment(confirmCommand))
                 .isInstanceOf(PaymentRetryExhaustedException.class)
                 .satisfies(throwable -> {
                     PaymentRetryExhaustedException ex = (PaymentRetryExhaustedException) throwable;

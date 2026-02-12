@@ -23,7 +23,7 @@ import org.springframework.web.client.RestClient;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class TossPaymentWebClient implements PaymentGatewayClient {
+public class TossPaymentClient implements PaymentGatewayClient {
 
     private static final String CONFIRM_PAYMENT_URL = "/v1/payments/confirm";
     private static final String IDEMPOTENCY_KEY_HEADER = "Idempotency-Key";
