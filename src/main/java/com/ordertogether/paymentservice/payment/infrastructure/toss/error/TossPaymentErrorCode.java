@@ -97,6 +97,10 @@ public enum TossPaymentErrorCode {
         };
     }
 
+    public boolean isFail() {
+        return !isSuccess() && !isUnknown();
+    }
+
     public boolean isRetryable() {
         return isUnknown();
     }
