@@ -1,7 +1,6 @@
 package com.ordertogether.paymentservice.payment.infrastructure.toss;
 
 import com.ordertogether.paymentservice.exception.PaymentGatewayConfirmationException;
-import com.ordertogether.paymentservice.exception.PaymentRetryExhaustedException;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.infrastructure.toss.error.TossPaymentErrorCode;
 import com.ordertogether.paymentservice.payment.infrastructure.toss.mapper.TossPaymentMethodMapper;
@@ -33,30 +32,15 @@ public class TossPaymentClient implements PaymentGatewayClient {
     private final RetryTemplate paymentGatewayRetryTemplate;
 
     @Override
-    public PGConfirmResult confirmPayment(PGConfirmCommand request) throws PaymentRetryExhaustedException {
+    public PGConfirmResult confirmPayment(PGConfirmCommand request) {
         try {
             return paymentGatewayRetryTemplate.execute(() -> executeConfirmPayment(request));
         } catch (RetryException e) {
-            //RetryException -> BusinessException 으로 변환
-            String errorCode = PaymentStatus.UNKNOWN.name();
-            String errorMessage = PaymentStatus.UNKNOWN.getDescription();
-            PaymentStatus paymentStatus = PaymentStatus.UNKNOWN;
-
-            if (e.getLastException() instanceof PaymentGatewayConfirmationException paymentGatewayConfirmationException) {
-                errorCode = paymentGatewayConfirmationException.getErrorCode();
-                errorMessage = paymentGatewayConfirmationException.getErrorMessage();
-                paymentStatus = paymentGatewayConfirmationException.getPaymentStatus();
+            Throwable lastException = e.getLastException();
+            if (lastException instanceof RuntimeException runtimeException) {
+                throw runtimeException;
             }
-
-            throw new PaymentRetryExhaustedException(
-                request.paymentKey(),
-                request.orderId(),
-                errorCode,
-                errorMessage,
-                paymentStatus,
-                e.getRetryCount(),
-                e.getLastException()
-            );
+            throw new IllegalStateException("결제 승인 과정 중 알 수 없는 오류가 발생했습니다. %s".formatted(e.getMessage()), e);
         }
     }
 
