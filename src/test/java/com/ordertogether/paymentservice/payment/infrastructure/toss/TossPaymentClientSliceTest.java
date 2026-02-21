@@ -77,7 +77,7 @@ class TossPaymentClientSliceTest {
                     .body(errorResponse.generateErrorResponse())
                     .contentType(MediaType.APPLICATION_JSON));
 
-            //when & given
+            //when & then
             assertThatThrownBy(() -> tossPaymentClient.confirmPayment(command))
                 .isInstanceOf(PaymentGatewayConfirmationException.class)
                 .satisfies(throwable -> {
