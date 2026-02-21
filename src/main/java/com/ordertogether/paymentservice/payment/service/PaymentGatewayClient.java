@@ -1,6 +1,5 @@
 package com.ordertogether.paymentservice.payment.service;
 
-import com.ordertogether.paymentservice.exception.PaymentRetryExhaustedException;
 import com.ordertogether.paymentservice.payment.service.command.PGConfirmCommand;
 import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult;
 
@@ -15,8 +14,7 @@ public interface PaymentGatewayClient {
      * - 승인 결과에 따라 재시도를 수행할 수 있습니다.
      * @param request 결제 승인 요청 정보
      * @return 결제 승인 결과
-     * @throws PaymentRetryExhaustedException 재시도 한도를 초과한 경우 발생합니다.
      */
-    PGConfirmResult confirmPayment(PGConfirmCommand request) throws PaymentRetryExhaustedException;
+    PGConfirmResult confirmPayment(PGConfirmCommand request);
 
 }
