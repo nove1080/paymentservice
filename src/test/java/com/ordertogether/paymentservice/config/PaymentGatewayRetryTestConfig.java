@@ -9,7 +9,7 @@ import org.springframework.core.retry.RetryTemplate;
 public class PaymentGatewayRetryTestConfig {
 
     @Bean
-    public RetryTemplate NeverRetryTemplate() {
+    public RetryTemplate neverRetryTemplate() {
         RetryPolicy neverRetryPolicy = RetryPolicy.builder()
             .maxRetries(0)
             .build();
