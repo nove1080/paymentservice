@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("체크아웃 서비스 통합 테스트")
 @ActiveProfiles(profiles = "test")
-class CheckoutServicePaymentIntegrationTest extends PaymentIntegrationTest {
+class CheckoutServiceIntegrationTest extends PaymentIntegrationTest {
 
     @Autowired
     private CheckoutService checkoutService;

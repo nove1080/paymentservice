@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayName("결제 상태 업데이트 서비스 통합 테스트")
 @ActiveProfiles(profiles = "test")
 @SpringBootTest
-class PaymentStatusUpdateServicePaymentIntegrationTest extends PaymentIntegrationTest {
+class PaymentStatusUpdateServiceIntegrationTest extends PaymentIntegrationTest {
 
     @Autowired
     private PaymentStatusUpdateService paymentStatusUpdateService;

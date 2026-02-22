@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("결제 승인 서비스 통합 테스트")
 @ActiveProfiles(profiles = "test")
-class PaymentConfirmServicePaymentIntegrationTest extends PaymentIntegrationTest {
+class PaymentConfirmServiceIntegrationTest extends PaymentIntegrationTest {
 
     @Autowired
     private PaymentConfirmService paymentConfirmService;
