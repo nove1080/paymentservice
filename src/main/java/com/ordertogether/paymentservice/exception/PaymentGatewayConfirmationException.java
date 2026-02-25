@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class PaymentGatewayConfirmationException extends RuntimeException {
+public class PaymentGatewayConfirmationException extends PaymentException {
 
     private final String paymentKey;
     private final OrderId orderId;
