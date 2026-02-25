@@ -43,18 +43,9 @@ public class PaymentConfirmExceptionHandler {
 
     private PaymentFailure resolveFailure(Throwable e) {
         return switch (e) {
-            case InvalidPaymentException ex -> PaymentFailure.builder()
-                .code(ex.getClass().getName())
-                .message(ex.getMessage())
-                .build();
-            case PaymentGatewayConfirmationException ex -> PaymentFailure.builder()
-                .code(ex.getClass().getName())
-                .message(ex.getMessage())
-                .build();
-            default -> PaymentFailure.builder()
-                .code(PaymentStatus.UNKNOWN.name())
-                .message(PaymentStatus.UNKNOWN.getDescription())
-                .build();
+            case InvalidPaymentException ex -> PaymentFailure.from(ex);
+            case PaymentGatewayConfirmationException ex -> PaymentFailure.from(ex);
+            default -> PaymentFailure.from(e);
         };
     }
 
