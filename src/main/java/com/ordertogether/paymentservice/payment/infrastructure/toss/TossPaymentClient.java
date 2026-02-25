@@ -1,5 +1,6 @@
 package com.ordertogether.paymentservice.payment.infrastructure.toss;
 
+import com.ordertogether.paymentservice.exception.PaymentException;
 import com.ordertogether.paymentservice.exception.PaymentGatewayConfirmationException;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.infrastructure.toss.error.TossPaymentErrorCode;
@@ -40,7 +41,7 @@ public class TossPaymentClient implements PaymentGatewayClient {
             if (lastException instanceof RuntimeException runtimeException) {
                 throw runtimeException;
             }
-            throw new IllegalStateException("결제 승인 과정 중 알 수 없는 오류가 발생했습니다. %s".formatted(e.getMessage()), e);
+            throw new PaymentException("결제 승인 과정 중 알 수 없는 오류가 발생했습니다. %s".formatted(e.getMessage()), e);
         }
     }
 
