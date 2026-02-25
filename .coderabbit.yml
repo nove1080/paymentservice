@@ -34,3 +34,6 @@ chat:
 knowledge_base:
   web_search:
     enabled: true
+issue_enrichment:
+  auto_enrich:
+    enabled: false
