@@ -1,14 +1,12 @@
 package com.ordertogether.paymentservice.payment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentFailure;
 import com.ordertogether.paymentservice.payment.domain.PaymentMethod;
-import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
@@ -20,7 +18,6 @@ import com.ordertogether.paymentservice.payment.service.result.PaymentConfirmRes
 import com.ordertogether.paymentservice.support.base.PaymentIntegrationTest;
 import com.ordertogether.paymentservice.support.fixture.PaymentEventFixtureBuilder;
 import com.ordertogether.paymentservice.support.fixture.PaymentOrderFixtureBuilder;
-import com.ordertogether.paymentservice.exception.InvalidPaymentException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("결제 승인 서비스 통합 테스트")
 @ActiveProfiles(profiles = "test")
-class PaymentConfirmServicePaymentIntegrationTest extends PaymentIntegrationTest {
+class PaymentConfirmServiceIntegrationTest extends PaymentIntegrationTest {
 
     @Autowired
     private PaymentConfirmService paymentConfirmService;
@@ -85,7 +82,6 @@ class PaymentConfirmServicePaymentIntegrationTest extends PaymentIntegrationTest
                     .paymentKey(paymentKey)
                     .orderId(orderId)
                     .status(PaymentStatus.SUCCESS)
-                    .failureExtraInfo(null)
                     .successExtraInfo(SuccessExtraInfo.builder()
                         .approvedAt(LocalDateTime.now())
                         .amount(paymentEvent.totalAmount())
@@ -101,23 +97,8 @@ class PaymentConfirmServicePaymentIntegrationTest extends PaymentIntegrationTest
         }
 
         @Test
-        @DisplayName("결제 요청 금액이 다를 경우, 예외를 발생시킨다")
-        void givenInvalidAmount_thenThrowException() {
-            //given
-            PaymentConfirmCommand command = PaymentConfirmCommand.builder()
-                .paymentKey(paymentKey)
-                .orderId(orderId)
-                .amount(25000L) // 잘못된 금액
-                .build();
-
-            //when & then
-            assertThatThrownBy(() -> paymentConfirmService.confirm(command))
-                .isInstanceOf(InvalidPaymentException.class);
-        }
-
-        @Test
         @Transactional
-        @DisplayName("PG사의 실패 응답이 올 경우, 결제 실패로 처리된다")
+        @DisplayName("PG사 결제 승인에 실패한 경우, 결제 상태가 실패로 기록된다")
         void givenPaymentGatewayFailResponse_thenFail() {
             //given
             PaymentConfirmCommand command = PaymentConfirmCommand.builder()
@@ -132,22 +113,42 @@ class PaymentConfirmServicePaymentIntegrationTest extends PaymentIntegrationTest
                     .orderId(orderId)
                     .status(PaymentStatus.FAIL)
                     .failureExtraInfo(PaymentFailure.builder()
-                        .code("PG-001")
-                        .message("Insufficient funds")
+                        .code("")
+                        .message("")
                         .build())
-                    .successExtraInfo(null)
                     .build());
 
             //when
             PaymentConfirmResult confirmResult = paymentConfirmService.confirm(command);
 
             //then
-            PaymentEvent failedEvent = paymentRepository.selectPaymentEvent(orderId);
+            PaymentEvent failedPaymentEvent = paymentRepository.selectPaymentEvent(orderId);
+
             assertThat(confirmResult.paymentStatus().isFail()).isTrue();
-            assertThat(failedEvent.getPaymentOrders())
-                .extracting(PaymentOrder::getPaymentStatus)
-                .containsOnly(PaymentStatus.FAIL);
+            assertThat(failedPaymentEvent.isFail()).isTrue();
         }
+
+        @Test
+        @Transactional
+        @DisplayName("결제 금액이 상이한 경우, 결제 상태가 실패로 기록된다")
+        void whenInvalidPaymentErrorOccur_thenSavePaymentStatusFail() {
+            //given
+            PaymentConfirmCommand command = PaymentConfirmCommand.builder()
+                .paymentKey(paymentKey)
+                .orderId(orderId)
+                .amount(40000L)
+                .build();
+
+            //when
+            PaymentConfirmResult confirmResult = paymentConfirmService.confirm(command);
+
+            //then
+            PaymentEvent failedPaymentEvent = paymentRepository.selectPaymentEvent(orderId);
+
+            assertThat(confirmResult.paymentStatus().isFail()).isTrue();
+            assertThat(failedPaymentEvent.isFail()).isTrue();
+        }
+
     }
 
 }
