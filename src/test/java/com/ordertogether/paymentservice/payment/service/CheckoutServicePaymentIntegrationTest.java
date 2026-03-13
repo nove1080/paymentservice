@@ -43,6 +43,7 @@ class CheckoutServicePaymentIntegrationTest extends PaymentIntegrationTest {
     @DisplayName("유효한 결제 요청 시")
     @Nested
     class WhenValidRequest {
+
         @Test
         @Transactional
         @DisplayName("결제 이벤트와 주문을 저장한다")
@@ -107,9 +108,9 @@ class CheckoutServicePaymentIntegrationTest extends PaymentIntegrationTest {
     @DisplayName("중복 결제 요청 시")
     @Nested
     class WhenDuplicatedRequest {
+
         @Test
         @DisplayName("체크아웃에 실패한다")
-        @Transactional
         void thenFailToSavePaymentEventAndOrder() {
             //given
             CheckoutCommand checkoutCommand = CheckoutCommand.builder()
@@ -138,6 +139,7 @@ class CheckoutServicePaymentIntegrationTest extends PaymentIntegrationTest {
     @DisplayName("일부 상품 정보가 누락된 결제 요청 시")
     @Nested
     class WhenMissingProductInfo {
+
         @Test
         @DisplayName("런타임 예외를 발생시킨다")
         void thenThrowRuntimeException() {
