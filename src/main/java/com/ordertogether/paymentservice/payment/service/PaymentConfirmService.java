@@ -9,7 +9,6 @@ import com.ordertogether.paymentservice.payment.service.result.PGConfirmResult;
 import com.ordertogether.paymentservice.payment.service.result.PaymentConfirmResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,7 +19,6 @@ public class PaymentConfirmService {
     private final PaymentGatewayClient paymentGatewayClient;
     private final PaymentConfirmExceptionHandler paymentConfirmExceptionHandler;
 
-    @Transactional
     public PaymentConfirmResult confirm(PaymentConfirmCommand command) {
         try {
             paymentStatusUpdateService.updatePaymentStatus(
