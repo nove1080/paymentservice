@@ -72,6 +72,10 @@ class PaymentConfirmExceptionHandlerTest {
                 PaymentStatus.FAIL
             ),
             Arguments.of(
+                new PaymentGatewayConfirmationException(PAYMENT_KEY, ORDER_ID, PaymentStatus.UNKNOWN, "", ""),
+                PaymentStatus.UNKNOWN
+            ),
+            Arguments.of(
                 new RuntimeException(""),
                 PaymentStatus.UNKNOWN
             )

@@ -36,7 +36,7 @@ public class PaymentConfirmExceptionHandler {
     private PaymentStatus resolveStatus(Throwable e) {
         return switch (e) {
             case InvalidPaymentException ex -> PaymentStatus.FAIL;
-            case PaymentGatewayConfirmationException ex -> PaymentStatus.FAIL;
+            case PaymentGatewayConfirmationException ex -> ex.getPaymentStatus();
             default -> PaymentStatus.UNKNOWN;
         };
     }
