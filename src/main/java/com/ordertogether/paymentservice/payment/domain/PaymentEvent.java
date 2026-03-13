@@ -83,6 +83,10 @@ public class PaymentEvent extends BaseTimeEntity {
             .sum();
     }
 
+    public Integer totalQuantity() {
+        return paymentOrders.size();
+    }
+
     public void updatePaymentKey(String paymentKey) {
         this.paymentKey = paymentKey;
     }
@@ -102,10 +106,6 @@ public class PaymentEvent extends BaseTimeEntity {
         this.isPaymentDone = true;
     }
 
-    public boolean isFail() {
-        return paymentOrders.stream().allMatch(PaymentOrder::isFail);
-    }
-
     /**
      * 결제 완료로 인한 부가정보를 기록합니다. <br>
      * - 결제 수단 <br>
@@ -120,4 +120,9 @@ public class PaymentEvent extends BaseTimeEntity {
         this.method = successExtraInfo.paymentMethod();
         this.approvedAt = successExtraInfo.approvedAt();
     }
+
+    public boolean isFail() {
+        return !paymentOrders.isEmpty() && paymentOrders.stream().allMatch(PaymentOrder::isFail);
+    }
+
 }
