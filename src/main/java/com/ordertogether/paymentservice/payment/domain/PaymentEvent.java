@@ -70,6 +70,8 @@ public class PaymentEvent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
+    private Byte retryCount;
+
     private LocalDateTime approvedAt;
 
     public void addPaymentOrder(PaymentOrder paymentOrder) {
