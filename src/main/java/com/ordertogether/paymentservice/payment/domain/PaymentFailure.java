@@ -8,4 +8,11 @@ public record PaymentFailure (
     String message
 ) {
 
+    public static PaymentFailure from(Throwable e) {
+        return PaymentFailure.builder()
+            .code(e.getClass().getName())
+            .message(e.getMessage() != null ? e.getMessage() : PaymentStatus.UNKNOWN.getDescription())
+            .build();
+    }
+
 }

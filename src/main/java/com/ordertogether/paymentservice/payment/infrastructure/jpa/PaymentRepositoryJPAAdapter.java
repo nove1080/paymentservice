@@ -5,6 +5,7 @@ import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +34,10 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     @Transactional
     public void insertPaymentHistory(PaymentOrderHistory history) {
         paymentOrderHistoryRepository.save(history);
+    }
+
+    @Override
+    public List<PaymentOrderHistory> selectPaymentHistories(OrderId orderId) {
+        return paymentOrderHistoryRepository.findByOrderId(orderId);
     }
 }

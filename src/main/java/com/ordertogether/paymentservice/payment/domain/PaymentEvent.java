@@ -83,6 +83,10 @@ public class PaymentEvent extends BaseTimeEntity {
             .sum();
     }
 
+    public Integer totalQuantity() {
+        return paymentOrders.size();
+    }
+
     public void updatePaymentKey(String paymentKey) {
         this.paymentKey = paymentKey;
     }
@@ -116,4 +120,9 @@ public class PaymentEvent extends BaseTimeEntity {
         this.method = successExtraInfo.paymentMethod();
         this.approvedAt = successExtraInfo.approvedAt();
     }
+
+    public boolean isFail() {
+        return !paymentOrders.isEmpty() && paymentOrders.stream().allMatch(PaymentOrder::isFail);
+    }
+
 }

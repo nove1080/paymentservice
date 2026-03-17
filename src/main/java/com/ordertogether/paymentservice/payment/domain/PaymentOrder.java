@@ -75,4 +75,8 @@ public class PaymentOrder extends BaseTimeEntity {
     public boolean isPaid() {
         return paymentStatus.isSuccess();
     }
+
+    public boolean isFail() {
+        return paymentStatus.isFail();
+    }
 }
