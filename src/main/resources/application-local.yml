@@ -21,3 +21,9 @@ spring:
 
   thymeleaf:
     cache: false
+
+payment:
+  recovery:
+    enabled: true
+    max-retry-count: 3
+    retry-interval-seconds: 120
