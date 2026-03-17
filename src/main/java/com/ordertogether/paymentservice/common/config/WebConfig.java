@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public FilterRegistrationBean<LogFilter> logFilter() {
-        FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>(new LogFilter());
+        FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new LogFilter());
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
