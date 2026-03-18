@@ -70,7 +70,7 @@ public class PaymentEvent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
-    private Byte retryCount;
+    private byte failedCount;
 
     private LocalDateTime approvedAt;
 
@@ -125,6 +125,10 @@ public class PaymentEvent extends BaseTimeEntity {
 
     public boolean isFail() {
         return !paymentOrders.isEmpty() && paymentOrders.stream().allMatch(PaymentOrder::isFail);
+    }
+
+    public byte increaseFailedCount() {
+        return failedCount++;
     }
 
 }

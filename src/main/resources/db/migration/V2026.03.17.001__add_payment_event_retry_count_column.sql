@@ -1,2 +1,2 @@
 ALTER TABLE payment_event
-    ADD COLUMN retry_count TINYINT UNSIGNED DEFAULT 0;
+    ADD COLUMN failed_count TINYINT UNSIGNED DEFAULT 0;
