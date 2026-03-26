@@ -5,6 +5,7 @@ import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -39,5 +40,11 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     @Override
     public List<PaymentOrderHistory> selectPaymentHistories(OrderId orderId) {
         return paymentOrderHistoryRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public List<PaymentEvent> selectRecoverablePaymentEvents(Integer failedCountThreshold, Integer afterSeconds) {
+        LocalDateTime updatedBefore = LocalDateTime.now().minusSeconds(afterSeconds);
+        return paymentEventJPARepository.findRecoverablePaymentEvents(failedCountThreshold, updatedBefore);
     }
 }
