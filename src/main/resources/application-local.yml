@@ -26,4 +26,4 @@ payment:
   recovery:
     enabled: true
     max-retry-count: 3
-    retry-interval-seconds: 120
+    min-age-seconds: 120

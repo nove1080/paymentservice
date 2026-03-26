@@ -10,12 +10,12 @@ public class PaymentRecoveryProperties {
 
     private final Boolean enabled;
     private final Integer maxRetryCount;
-    private final Integer retryIntervalMinutes;
+    private final Integer minAgeSeconds;
 
     @ConstructorBinding
-    public PaymentRecoveryProperties(Boolean enabled, Integer maxRetryCount, Integer retryIntervalMinutes) {
+    public PaymentRecoveryProperties(Boolean enabled, Integer maxRetryCount, Integer minAgeSeconds) {
         this.enabled = enabled;
         this.maxRetryCount = maxRetryCount;
-        this.retryIntervalMinutes = retryIntervalMinutes;
+        this.minAgeSeconds = minAgeSeconds;
     }
 }
