@@ -10,4 +10,12 @@ public record PGConfirmCommand(
     Long amount
 ) {
 
+    public static PGConfirmCommand from(PaymentConfirmCommand command) {
+        return PGConfirmCommand.builder()
+                .paymentKey(command.paymentKey())
+                .orderId(command.orderId())
+                .amount(command.amount())
+            .build();
+    }
+
 }
