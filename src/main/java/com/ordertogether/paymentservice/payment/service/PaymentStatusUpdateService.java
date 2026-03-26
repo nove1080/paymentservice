@@ -45,7 +45,7 @@ public class PaymentStatusUpdateService {
         paymentEvent.updatePaymentKey(command.paymentKey());
         paymentEvent.getPaymentOrders()
             .forEach(it -> {
-                insertPaymentHistory(it, PaymentStatus.EXECUTING, PaymentStatusUpdateReason.PAYMENT_EXECUTING.getDescription());
+                insertPaymentHistory(it, PaymentStatus.EXECUTING, command.reason() != null ? command.reason().getDescription() : PaymentStatusUpdateReason.PAYMENT_EXECUTING.getDescription());
                 it.changePaymentStatus(PaymentStatus.EXECUTING);
             });
     }
@@ -53,7 +53,7 @@ public class PaymentStatusUpdateService {
     private void updatePaymentStatusToSuccess(PaymentStatusUpdateCommand command) {
         PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(command.orderId());
         paymentEvent.getPaymentOrders().forEach(it -> {
-            insertPaymentHistory(it, PaymentStatus.SUCCESS, PaymentStatusUpdateReason.PAYMENT_CONFIRMED.getDescription());
+            insertPaymentHistory(it, PaymentStatus.SUCCESS, command.reason() != null ? command.reason().getDescription() : PaymentStatusUpdateReason.PAYMENT_CONFIRMED.getDescription());
             it.changePaymentStatus(PaymentStatus.SUCCESS);
         });
 
@@ -62,16 +62,18 @@ public class PaymentStatusUpdateService {
 
     private void updatePaymentStatusToFail(PaymentStatusUpdateCommand command) {
         PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(command.orderId());
+        paymentEvent.increaseFailedCount();
         paymentEvent.getPaymentOrders().forEach(it -> {
-            insertPaymentHistory(it, PaymentStatus.FAIL, command.failureExtraInfo().message());
+            insertPaymentHistory(it, PaymentStatus.FAIL, command.reason() != null ? command.reason().getDescription() : command.failureExtraInfo().message());
             it.changePaymentStatus(PaymentStatus.FAIL);
         });
     }
 
     private void updatePaymentStatusToUnknown(PaymentStatusUpdateCommand command) {
         PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(command.orderId());
+        paymentEvent.increaseFailedCount();
         paymentEvent.getPaymentOrders().forEach(it -> {
-            insertPaymentHistory(it, PaymentStatus.UNKNOWN, command.failureExtraInfo().message());
+            insertPaymentHistory(it, PaymentStatus.UNKNOWN, command.reason() != null ? command.reason().getDescription() : command.failureExtraInfo().message());
             it.changePaymentStatus(PaymentStatus.UNKNOWN);
         });
     }
