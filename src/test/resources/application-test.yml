@@ -16,3 +16,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+payment:
+  recovery:
+    enabled: true
+    max-retry-count: 3
+    min-age-seconds: 120
