@@ -22,7 +22,7 @@ public enum PaymentStatus {
 
     static {
         NOT_STARTED.nextStatuses = List.of(EXECUTING, UNKNOWN);
-        EXECUTING.nextStatuses = List.of(SUCCESS, FAIL, UNKNOWN);
+        EXECUTING.nextStatuses = List.of(EXECUTING, SUCCESS, FAIL, UNKNOWN);
         SUCCESS.nextStatuses = Collections.emptyList();
         FAIL.nextStatuses = Collections.emptyList();
         UNKNOWN.nextStatuses = List.of(EXECUTING);

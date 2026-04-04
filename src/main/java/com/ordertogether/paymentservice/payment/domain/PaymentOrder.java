@@ -33,6 +33,7 @@ public class PaymentOrder extends BaseTimeEntity {
     @Column(name = "payment_order_id", updatable = false)
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "payment_event_id", nullable = false)
     private PaymentEvent paymentEvent;

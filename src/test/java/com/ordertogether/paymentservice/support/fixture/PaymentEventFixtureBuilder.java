@@ -25,7 +25,7 @@ public class PaymentEventFixtureBuilder {
 
     private PaymentMethod method = PaymentMethod.EASY_PAY;
 
-    private LocalDateTime approvedAt = LocalDateTime.of(2025, 1, 1, 0, 0);
+    private LocalDateTime approvedAt = LocalDateTime.now();
 
     public PaymentEventFixtureBuilder addPaymentOrder(PaymentOrder paymentOrder) {
         paymentOrders.add(paymentOrder);

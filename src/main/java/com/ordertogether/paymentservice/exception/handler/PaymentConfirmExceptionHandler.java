@@ -9,12 +9,14 @@ import com.ordertogether.paymentservice.payment.service.command.PaymentConfirmCo
 import com.ordertogether.paymentservice.payment.service.command.PaymentStatusUpdateCommand;
 import com.ordertogether.paymentservice.payment.service.result.PaymentConfirmResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 결제 승인 과정에서 발생하는 예외를 적절히 처리합니다.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentConfirmExceptionHandler {
@@ -23,6 +25,7 @@ public class PaymentConfirmExceptionHandler {
 
     @Transactional
     public PaymentConfirmResult handle(PaymentConfirmCommand command, Throwable e) {
+        log.info("결제 승인 과정에서 예외 발생. [orderId: {}, paymentKey: {}, errorMessage: {}]", command.orderId(), command.paymentKey(), e.getMessage());
         PaymentStatus status = resolveStatus(e);
         PaymentFailure failure = resolveFailure(e);
 

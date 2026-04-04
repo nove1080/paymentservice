@@ -1,0 +1,2 @@
+ALTER TABLE payment_event
+    ADD COLUMN failed_count TINYINT UNSIGNED DEFAULT 0;
