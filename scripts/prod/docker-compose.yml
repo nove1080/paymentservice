@@ -1,0 +1,85 @@
+services:
+  application:
+    build: ../../
+    deploy:
+      replicas: 3
+    ports:
+      - "8081-8083:8080"
+    env_file:
+      - ../../.env
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ordertogether?serverTimezone=Asia/Seoul
+      TZ: Asia/Seoul
+    depends_on:
+      mysql:
+        condition: service_healthy
+        restart: true
+    networks:
+      - back-tier
+      - front-tier
+
+  mysql:
+    image: mysql:8.0.42
+    container_name: mysql
+    ports:
+      - "13309:3306"
+    restart: unless-stopped
+    volumes:
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ordertogether
+      TZ: Asia/Seoul
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - back-tier
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - back-tier
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - back-tier
+      - front-tier
+
+  view:
+    build:
+      context: /Users/jebeop/project/payment-view
+      dockerfile: dockerfile
+    container_name: view
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - front-tier
+
+volumes:
+  grafana_storage:
+
+networks:
+  front-tier:
+  back-tier:
