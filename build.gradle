@@ -64,6 +64,12 @@ dependencies {
 
 	/** JUnit Platform */
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	/** Spring Actuator */
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	/** Prometheus */
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 test {
