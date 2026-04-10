@@ -27,3 +27,17 @@ payment:
     enabled: true
     max-retry-count: 3
     min-age-seconds: 120
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+management:
+  endpoint:
+    health:
+      show-components: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
