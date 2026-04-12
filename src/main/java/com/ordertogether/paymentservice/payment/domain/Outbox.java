@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +24,9 @@ import org.hibernate.type.SqlTypes;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "uk_outbox_idempotency_key", columnNames = "idempotency_key"),
+})
 @Entity
 public class Outbox extends BaseTimeEntity {
 
@@ -29,6 +34,9 @@ public class Outbox extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "outbox_id", updatable = false)
     private Long id;
+
+    @Column(nullable = false, updatable = false)
+    private String idempotencyKey;
 
     private Integer partitionKey;
 
