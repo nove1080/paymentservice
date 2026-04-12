@@ -2,6 +2,7 @@ package com.ordertogether.paymentservice.payment.repository;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
+import com.ordertogether.paymentservice.payment.domain.PaymentOutbox;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface PaymentRepository {
      * @return 복구 가능한 결제 이벤트 목록
      */
     List<PaymentEvent> selectRecoverablePaymentEvents(Integer failedCountThreshold, Integer afterSeconds);
+
+    void insertPaymentOutbox(PaymentOutbox paymentOutbox);
 }
