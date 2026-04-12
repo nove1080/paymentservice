@@ -25,14 +25,14 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(uniqueConstraints = {
-    @UniqueConstraint(name = "uk_outbox_idempotency_key", columnNames = "idempotency_key"),
+    @UniqueConstraint(name = "uk_payment_outbox_idempotency_key", columnNames = "idempotency_key"),
 })
 @Entity
-public class Outbox extends BaseTimeEntity {
+public class PaymentOutbox extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "outbox_id", updatable = false)
+    @Column(name = "payment_outbox_id", updatable = false)
     private Long id;
 
     @Column(nullable = false, updatable = false)
