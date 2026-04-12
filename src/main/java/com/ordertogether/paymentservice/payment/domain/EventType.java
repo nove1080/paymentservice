@@ -9,4 +9,6 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public enum EventType {
 
+    PAYMENT_CONFIRM_SUCCESS
+
 }
