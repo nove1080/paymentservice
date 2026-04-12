@@ -2,6 +2,7 @@ package com.ordertogether.paymentservice.payment.infrastructure.jpa;
 
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
+import com.ordertogether.paymentservice.payment.domain.PaymentOutbox;
 import com.ordertogether.paymentservice.payment.domain.vo.OrderId;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
 
     private final PaymentEventJPARepository paymentEventJPARepository;
     private final PaymentOrderHistoryJPARepository paymentOrderHistoryRepository;
+    private final PaymentOutboxJPARepository paymentOutboxJPARepository;
 
     @Override
     public PaymentEvent selectPaymentEvent(OrderId orderId) {
@@ -46,5 +48,11 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     public List<PaymentEvent> selectRecoverablePaymentEvents(Integer failedCountThreshold, Integer afterSeconds) {
         LocalDateTime updatedBefore = LocalDateTime.now().minusSeconds(afterSeconds);
         return paymentEventJPARepository.findRecoverablePaymentEvents(failedCountThreshold, updatedBefore);
+    }
+
+    @Override
+    @Transactional
+    public void insertPaymentOutbox(PaymentOutbox paymentOutbox) {
+        paymentOutboxJPARepository.save(paymentOutbox);
     }
 }
