@@ -43,4 +43,7 @@ public record PaymentStatusUpdateCommand(
             .build();
     }
 
+    public boolean isNotSuccess() {
+        return status.isNotSuccess();
+    }
 }
