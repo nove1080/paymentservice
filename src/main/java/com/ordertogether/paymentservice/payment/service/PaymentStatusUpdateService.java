@@ -1,5 +1,6 @@
 package com.ordertogether.paymentservice.payment.service;
 
+import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
@@ -7,7 +8,6 @@ import com.ordertogether.paymentservice.payment.domain.PaymentStatus;
 import com.ordertogether.paymentservice.payment.domain.PaymentStatusUpdateReason;
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.PaymentStatusUpdateCommand;
-import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PaymentStatusUpdateService {
 
+    private final PaymentOutboxService paymentOutboxService;
     private final PaymentRepository paymentRepository;
 
     /**
@@ -56,7 +57,7 @@ public class PaymentStatusUpdateService {
             insertPaymentHistory(it, PaymentStatus.SUCCESS, command.reason() != null ? command.reason().getDescription() : PaymentStatusUpdateReason.PAYMENT_CONFIRMED.getDescription());
             it.changePaymentStatus(PaymentStatus.SUCCESS);
         });
-
+        paymentOutboxService.insertPaymentOutbox(command);
         paymentEvent.done(command.successExtraInfo());
     }
 
