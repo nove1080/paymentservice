@@ -1,5 +1,6 @@
 package com.ordertogether.paymentservice.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ordertogether.paymentservice.common.domain.BaseTimeEntity;
 import com.ordertogether.paymentservice.payment.domain.vo.Price;
 import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
@@ -34,6 +35,7 @@ public class PaymentOrder extends BaseTimeEntity {
     private Long id;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "payment_event_id", nullable = false)
     private PaymentEvent paymentEvent;
