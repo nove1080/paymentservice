@@ -55,4 +55,10 @@ public class PaymentRepositoryJPAAdapter implements PaymentRepository {
     public void insertPaymentOutbox(PaymentOutbox paymentOutbox) {
         paymentOutboxJPARepository.save(paymentOutbox);
     }
+
+    @Override
+    public PaymentOutbox selectPaymentOutbox(String idempotencyKey) {
+        return paymentOutboxJPARepository.findByIdempotencyKey(idempotencyKey)
+            .orElseThrow(() -> new EntityNotFoundException("[idempotencyKey: %s]에 해당하는 PaymentOutbox 를 찾을 수 없습니다.".formatted(idempotencyKey)));
+    }
 }

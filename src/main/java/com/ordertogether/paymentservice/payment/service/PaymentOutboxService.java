@@ -42,4 +42,10 @@ public class PaymentOutboxService {
         return paymentMessage;
     }
 
+    @Transactional
+    public void markAsPublished(String idempotencyKey) {
+        PaymentOutbox paymentOutbox = paymentRepository.selectPaymentOutbox(idempotencyKey);
+        paymentOutbox.markAsPublished();
+    }
+
 }

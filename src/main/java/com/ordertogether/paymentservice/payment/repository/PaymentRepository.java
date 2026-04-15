@@ -25,4 +25,6 @@ public interface PaymentRepository {
     List<PaymentEvent> selectRecoverablePaymentEvents(Integer failedCountThreshold, Integer afterSeconds);
 
     void insertPaymentOutbox(PaymentOutbox paymentOutbox);
+
+    PaymentOutbox selectPaymentOutbox(String idempotencyKey);
 }
