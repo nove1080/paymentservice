@@ -2,6 +2,7 @@ package com.ordertogether.paymentservice.payment.infrastructure.kafka;
 
 import static com.ordertogether.paymentservice.payment.infrastructure.kafka.PaymentEventKafkaPublisher.Topic.PAYMENT_CONFIRM_SUCCESS;
 
+import com.ordertogether.paymentservice.common.util.PartitionKeyGenerator;
 import com.ordertogether.paymentservice.payment.domain.PaymentConfirmMessage;
 import com.ordertogether.paymentservice.payment.service.PaymentEventPublisher;
 import com.ordertogether.paymentservice.payment.service.PaymentOutboxService;
@@ -30,6 +31,8 @@ public class PaymentEventKafkaPublisher implements PaymentEventPublisher {
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 paymentOutboxService.markAsPublished(message.orderId());
+            } else {
+                log.error("Failed to publish payment confirmed event for orderId: {}", message.orderId(), ex);
             }
         });
     }
