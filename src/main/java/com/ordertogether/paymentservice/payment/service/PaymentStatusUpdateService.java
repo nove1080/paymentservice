@@ -1,6 +1,7 @@
 package com.ordertogether.paymentservice.payment.service;
 
 import com.ordertogether.paymentservice.exception.InvalidPaymentStatusException;
+import com.ordertogether.paymentservice.payment.domain.PaymentConfirmMessage;
 import com.ordertogether.paymentservice.payment.domain.PaymentEvent;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrder;
 import com.ordertogether.paymentservice.payment.domain.PaymentOrderHistory;
@@ -18,6 +19,7 @@ public class PaymentStatusUpdateService {
 
     private final PaymentOutboxService paymentOutboxService;
     private final PaymentRepository paymentRepository;
+    private final PaymentEventPublisher paymentEventPublisher;
 
     /**
      * 결제 상태 업데이트
@@ -39,7 +41,7 @@ public class PaymentStatusUpdateService {
      * 결제 상태를 EXECUTING 으로 변경
      * - 결제 키(payment key) 업데이트
      * - 결제 주문들의 상태를 EXECUTING 으로 변경
-     * @param command
+     * @param command 상태 업데이트 커맨드
      */
     private void updatePaymentStatusToExecuting(PaymentStatusUpdateCommand command) {
         PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(command.orderId());
@@ -51,14 +53,21 @@ public class PaymentStatusUpdateService {
             });
     }
 
+    /**
+     * 결제 상태를 SUCCESS 로 변경
+     * - 결제 주문들의 상태를 SUCCESS 로 변경
+     * - 결제 완료 이벤트 발행
+     * @param command 상태 업데이트 커맨드
+     */
     private void updatePaymentStatusToSuccess(PaymentStatusUpdateCommand command) {
         PaymentEvent paymentEvent = paymentRepository.selectPaymentEvent(command.orderId());
         paymentEvent.getPaymentOrders().forEach(it -> {
             insertPaymentHistory(it, PaymentStatus.SUCCESS, command.reason() != null ? command.reason().getDescription() : PaymentStatusUpdateReason.PAYMENT_CONFIRMED.getDescription());
             it.changePaymentStatus(PaymentStatus.SUCCESS);
         });
-        paymentOutboxService.insertPaymentOutbox(command);
         paymentEvent.done(command.successExtraInfo());
+        PaymentConfirmMessage message = paymentOutboxService.insertPaymentOutbox(command);
+        paymentEventPublisher.publishPaymentConfirmedEvent(message);
     }
 
     private void updatePaymentStatusToFail(PaymentStatusUpdateCommand command) {
