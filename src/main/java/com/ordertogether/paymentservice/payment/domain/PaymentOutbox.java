@@ -49,4 +49,11 @@ public class PaymentOutbox extends BaseTimeEntity {
 
     @Column(nullable = false)
     private boolean published;
+
+    public void markAsPublished() {
+        if (published) {
+            throw new IllegalStateException("이미 발행된 Outbox 메시지입니다. [idempotencyKey = %s]".formatted(idempotencyKey));
+        }
+        this.published = true;
+    }
 }
