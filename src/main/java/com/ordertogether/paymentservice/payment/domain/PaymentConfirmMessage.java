@@ -1,5 +1,6 @@
 package com.ordertogether.paymentservice.payment.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 
@@ -9,7 +10,8 @@ public record PaymentConfirmMessage(
     String orderId,
     String paymentKey,
     List<SimplePaymentOrder> paymentOrders,
-    Long amount
+    Long amount,
+    LocalDateTime confirmedAt
 ) {
 
     public static PaymentConfirmMessage from(PaymentEvent paymentEvent) {
@@ -19,6 +21,7 @@ public record PaymentConfirmMessage(
             .paymentKey(paymentEvent.getPaymentKey())
             .paymentOrders(SimplePaymentOrder.from(paymentEvent))
             .amount(paymentEvent.totalAmount())
+            .confirmedAt(paymentEvent.getApprovedAt())
             .build();
     }
 
