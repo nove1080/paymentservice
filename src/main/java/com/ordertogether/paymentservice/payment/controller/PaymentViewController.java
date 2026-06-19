@@ -22,7 +22,7 @@ public class PaymentViewController {
         CheckoutResult checkoutResult = checkoutService.checkout(CheckoutCommand.builder()
             .idempotencyKey(IdempotencyKeyGenerator.generate(LocalDateTime.now().toString()))
             .buyerId(1L)
-            .productIds(List.of(1L, 2L, 3L))
+            .productIds(List.of(1L, 2L, 3L, 4L))
             .build());
 
         model.addAttribute("orderId", checkoutResult.orderId().value());

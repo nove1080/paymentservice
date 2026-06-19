@@ -30,6 +30,7 @@ public class KafkaProducerConfiguration {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonJsonSerializer.class);
+        props.put(JacksonJsonSerializer.TYPE_MAPPINGS, "PaymentConfirmMessage:com.ordertogether.paymentservice.payment.domain.PaymentConfirmMessage");
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
         return props;
