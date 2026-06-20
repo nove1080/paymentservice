@@ -22,9 +22,26 @@ spring:
   thymeleaf:
     cache: false
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payment-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    listener:
+      concurrency: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: -1 #all
+      transaction-id-prefix: "payment-tx-"
+
 payment:
   recovery:
-    enabled: true
+    enabled: false
     max-retry-count: 3
     min-age-seconds: 120
 
@@ -41,3 +58,11 @@ management:
     web:
       exposure:
         include: "*"
+
+logging:
+  level:
+    org.springframework.kafka: DEBUG
+    org.springframework.kafka.listener: TRACE
+    org.springframework.kafka.listener.DeadLetterPublishingRecoverer: DEBUG
+    org.springframework.kafka.support.serializer: DEBUG
+    org.apache.kafka.clients.consumer: INFO
