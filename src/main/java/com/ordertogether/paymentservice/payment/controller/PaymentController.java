@@ -52,7 +52,6 @@ public class PaymentController {
             .build();
 
         PaymentConfirmResult confirmResult = paymentConfirmService.confirm(confirmCommand);
-        //포인트 충전
 
         PaymentConfirmResponse responseData = PaymentConfirmResponse.from(confirmResult);
         return ResponseEntity.ok(ApiResponse.with(HttpStatus.OK, "결제 승인을 완료하였습니다.", responseData));
