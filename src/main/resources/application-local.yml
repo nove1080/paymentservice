@@ -59,6 +59,9 @@ management:
       exposure:
         include: "*"
 
+app:
+  admin-email: ${ADMIN_EMAIL}
+
 logging:
   level:
     org.springframework.kafka: DEBUG
