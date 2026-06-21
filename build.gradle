@@ -51,6 +51,9 @@ dependencies {
 	/** JSR 310 */
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+	/** Spring Mail */
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	/** MySQL */
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
