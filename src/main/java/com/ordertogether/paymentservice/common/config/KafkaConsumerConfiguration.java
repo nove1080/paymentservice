@@ -2,6 +2,7 @@ package com.ordertogether.paymentservice.common.config;
 
 import com.ordertogether.paymentservice.payment.domain.LedgerEventMessage;
 import com.ordertogether.paymentservice.payment.domain.WalletEventMessage;
+import com.ordertogether.paymentservice.payment.domain.WalletEventMessage.Topic;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -40,7 +41,7 @@ public class KafkaConsumerConfiguration {
 
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
             (record, exception) -> {
-                String topic = "ledger-updated-dlt";
+                String topic = LedgerEventMessage.Topic.LEDGER_RECORD_SUCCESS_DLT;
                 return new TopicPartition(topic, record.partition());
             });
 
@@ -69,7 +70,7 @@ public class KafkaConsumerConfiguration {
 
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
             (record, exception) -> {
-                String topic = "wallet-updated-dlt";
+                String topic = Topic.SETTLEMENT_SUCCESS_DLT;
                 return new TopicPartition(topic, record.partition());
             });
 

@@ -10,5 +10,6 @@ public record WalletEventMessage(
 
     public static class Topic {
         public static final String SETTLEMENT_SUCCESS = "settlement-success";
+        public static final String SETTLEMENT_SUCCESS_DLT = "settlement-success-dlt";
     }
 }
