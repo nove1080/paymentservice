@@ -40,10 +40,7 @@ public class KafkaConsumerConfiguration {
         factory.getContainerProperties().setKafkaAwareTransactionManager(kafkaTransactionManager);
 
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
-            (record, exception) -> {
-                String topic = LedgerEventMessage.Topic.LEDGER_RECORD_SUCCESS_DLT;
-                return new TopicPartition(topic, record.partition());
-            });
+            (record, exception) -> new TopicPartition(LedgerEventMessage.Topic.LEDGER_RECORD_SUCCESS_DLT, -1));
 
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 2L));
 
@@ -69,10 +66,7 @@ public class KafkaConsumerConfiguration {
         factory.getContainerProperties().setKafkaAwareTransactionManager(kafkaTransactionManager);
 
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
-            (record, exception) -> {
-                String topic = Topic.SETTLEMENT_SUCCESS_DLT;
-                return new TopicPartition(topic, record.partition());
-            });
+            (record, exception) -> new TopicPartition(Topic.SETTLEMENT_SUCCESS_DLT, -1));
 
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 2L));
 
