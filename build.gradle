@@ -13,8 +13,8 @@ plugins {
 }
 
 group = 'com.ordertogether'
-version = '0.0.1-SNAPSHOT'
-description = 'OrderTogether Payment Service'
+version = '2026.06.27.003'
+description = 'disabled sql logs'
 
 java {
 	toolchain {
@@ -89,6 +89,10 @@ test {
 		excludeTags 'slow-test'
 	}
 	finalizedBy jacocoTestReport
+}
+
+jar {
+	enabled = false
 }
 
 jacocoTestReport {
