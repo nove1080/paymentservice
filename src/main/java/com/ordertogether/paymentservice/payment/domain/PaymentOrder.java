@@ -69,7 +69,7 @@ public class PaymentOrder extends BaseTimeEntity {
 
     public void validateTransition(PaymentStatus nextStatus) {
         if (!paymentStatus.canTransitionTo(nextStatus)) {
-            throw new InvalidPaymentStatusException(id, paymentStatus);
+            throw new InvalidPaymentStatusException(paymentEvent.getOrderId(), paymentStatus, nextStatus);
         }
     }
 
