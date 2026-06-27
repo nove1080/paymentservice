@@ -10,14 +10,25 @@
     </encoder>
   </appender>
 
-  <logger name="org.hibernate.SQL" level="DEBUG" additive="false">
+  <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/error.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
 
-  </logger>
-  <logger name="org.hibernate.orm.jdbc.bind" level="trace" additive="false">
+<!--  <logger name="org.hibernate.SQL" level="DEBUG" additive="false">-->
 
-  </logger>
+<!--  </logger>-->
+<!--  <logger name="org.hibernate.orm.jdbc.bind" level="trace" additive="false">-->
+
+<!--  </logger>-->
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
+    <appender-ref ref="ERROR_FILE"/>
   </root>
 </configuration>
