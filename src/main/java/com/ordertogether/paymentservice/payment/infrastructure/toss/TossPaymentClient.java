@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.retry.RetryException;
 import org.springframework.core.retry.RetryTemplate;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import org.springframework.web.client.RestClient;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@Profile({"prod"})
 public class TossPaymentClient implements PaymentGatewayClient {
 
     private static final String CONFIRM_PAYMENT_URL = "/v1/payments/confirm";
