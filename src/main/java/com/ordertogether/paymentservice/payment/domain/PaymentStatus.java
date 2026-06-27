@@ -21,11 +21,11 @@ public enum PaymentStatus {
     private List<PaymentStatus> nextStatuses;
 
     static {
-        NOT_STARTED.nextStatuses = List.of(EXECUTING, UNKNOWN);
+        NOT_STARTED.nextStatuses = List.of(NOT_STARTED, EXECUTING, UNKNOWN);
         EXECUTING.nextStatuses = List.of(EXECUTING, SUCCESS, FAIL, UNKNOWN);
-        SUCCESS.nextStatuses = Collections.emptyList();
-        FAIL.nextStatuses = Collections.emptyList();
-        UNKNOWN.nextStatuses = List.of(EXECUTING);
+        SUCCESS.nextStatuses = List.of(SUCCESS);
+        FAIL.nextStatuses = List.of(FAIL);
+        UNKNOWN.nextStatuses = List.of(UNKNOWN, EXECUTING);
     }
 
     public boolean isNotStarted() {

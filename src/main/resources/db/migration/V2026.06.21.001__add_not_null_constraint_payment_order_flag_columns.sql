@@ -1,0 +1,3 @@
+ALTER TABLE payment_order
+    MODIFY COLUMN is_wallet_updated TINYINT(1) NOT NULL DEFAULT FALSE,
+    MODIFY COLUMN is_ledger_updated TINYINT(1) NOT NULL DEFAULT FALSE;

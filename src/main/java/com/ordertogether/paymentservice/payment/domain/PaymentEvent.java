@@ -105,7 +105,26 @@ public class PaymentEvent extends BaseTimeEntity {
             .ifPresent(it -> { throw new InvalidPaymentStatusException(orderId, it.getPaymentStatus()); });
 
         applySuccessInfo(successInfo);
-        this.isPaymentDone = true;
+    }
+
+    /**
+     * 판매자와 구매자 간 계좌 업데이트를 완료 처리합니다.
+     */
+    public void completeWalletUpdate() {
+        paymentOrders.forEach(PaymentOrder::completeWalletUpdate);
+    }
+
+    /**
+     * 원장 업데이트를 완료 처리합니다.
+     */
+    public void completeLedgerUpdate() {
+        paymentOrders.forEach(PaymentOrder::completeLedgerUpdate);
+    }
+
+    public void markAsDoneIfAllComplete() {
+        if (paymentOrders.stream().allMatch(PaymentOrder::isPostProcessingDone)) {
+            this.isPaymentDone = true;
+        }
     }
 
     /**

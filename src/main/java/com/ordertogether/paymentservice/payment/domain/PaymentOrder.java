@@ -59,13 +59,17 @@ public class PaymentOrder extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
+    private boolean isWalletUpdated;
+
+    private boolean isLedgerUpdated;
+
     public void assignPaymentEvent(PaymentEvent paymentEvent) {
         this.paymentEvent = paymentEvent;
     }
 
     public void validateTransition(PaymentStatus nextStatus) {
         if (!paymentStatus.canTransitionTo(nextStatus)) {
-            throw new InvalidPaymentStatusException(id, paymentStatus);
+            throw new InvalidPaymentStatusException(paymentEvent.getOrderId(), paymentStatus, nextStatus);
         }
     }
 
@@ -73,6 +77,18 @@ public class PaymentOrder extends BaseTimeEntity {
         validateTransition(nextStatus);
         this.paymentStatus = nextStatus;
         return this.paymentStatus;
+    }
+
+    public void completeWalletUpdate() {
+        this.isWalletUpdated = true;
+    }
+
+    public void completeLedgerUpdate() {
+        this.isLedgerUpdated = true;
+    }
+
+    public boolean isPostProcessingDone() {
+        return isWalletUpdated && isLedgerUpdated;
     }
 
     public boolean isPaid() {

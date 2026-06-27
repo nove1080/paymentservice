@@ -7,6 +7,7 @@ public class InvalidPaymentStatusException extends PaymentException {
 
     private static final String INVALID_CONFIRMATION_STATUS_MESSAGE = "잘못된 결제 승인 상태 입니다. [orderId = %s, 결제 상태 = %s]";
     private static final String INVALID_STATUS_WITH_ID_MESSAGE = "잘못된 결제 상태 입니다. [id = %s, 결제 상태 = %s]";
+    public static final String INVALID_STATUS_TRANSITION_MESSAGE = "잘못된 결제 상태 전환입니다. [orderId = %s, 현재 상태 = %s, 다음 상태 = %s]";
 
     public InvalidPaymentStatusException(OrderId orderId, PaymentStatus status) {
         super(INVALID_CONFIRMATION_STATUS_MESSAGE.formatted(orderId.value(), status.name()));
@@ -14,5 +15,9 @@ public class InvalidPaymentStatusException extends PaymentException {
 
     public InvalidPaymentStatusException(Long id, PaymentStatus status) {
         super(INVALID_STATUS_WITH_ID_MESSAGE.formatted(id, status.name()));
+    }
+
+    public InvalidPaymentStatusException(OrderId orderId, PaymentStatus currentStatus, PaymentStatus nextStatus) {
+        super(INVALID_STATUS_TRANSITION_MESSAGE.formatted(orderId.value(), currentStatus.name(), nextStatus.name()));
     }
 }

@@ -38,6 +38,7 @@ public class PaymentOrderHistory extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus currentStatus;
 
+    @Column(columnDefinition = "TEXT")
     private String reason;
 
 }
