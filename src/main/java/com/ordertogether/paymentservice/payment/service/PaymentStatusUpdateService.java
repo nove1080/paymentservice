@@ -10,6 +10,7 @@ import com.ordertogether.paymentservice.payment.domain.PaymentStatusUpdateReason
 import com.ordertogether.paymentservice.payment.repository.PaymentRepository;
 import com.ordertogether.paymentservice.payment.service.command.PaymentStatusUpdateCommand;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class PaymentStatusUpdateService {
 
     private final PaymentOutboxService paymentOutboxService;
     private final PaymentRepository paymentRepository;
-    private final PaymentEventPublisher paymentEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * 결제 상태 업데이트
@@ -67,7 +68,7 @@ public class PaymentStatusUpdateService {
         });
         paymentEvent.done(command.successExtraInfo());
         PaymentConfirmMessage message = paymentOutboxService.insertPaymentOutbox(command);
-        paymentEventPublisher.publishPaymentConfirmedEvent(message);
+        applicationEventPublisher.publishEvent(message);
     }
 
     private void updatePaymentStatusToFail(PaymentStatusUpdateCommand command) {
